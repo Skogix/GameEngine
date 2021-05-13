@@ -12,11 +12,3 @@ type EngineEvent<'T when 'T :> iEvent>() =
     eventStore.Add e
     event.Trigger e
     ()
-    
-type TestEvent = Sträng of string interface iEvent
-type TestEvent2 = Test of int interface iEvent
-EngineEvent<TestEvent>.Listen (fun x -> printfn "TestEvent1: %A" x)
-EngineEvent<TestEvent2>.Listen (fun x -> printfn "TestEvent2: %A" x)
-EngineEvent<TestEvent>.Post(Sträng "test")
-EngineEvent<TestEvent2>.Post(Test 5)
-eventStore.History |> printfn "History: %A"
