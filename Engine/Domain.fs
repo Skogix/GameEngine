@@ -1,2 +1,2 @@
 module Engine.Domain
-let test = "skogix"
+type Entity = {Id:int}
