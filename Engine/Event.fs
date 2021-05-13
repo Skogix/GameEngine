@@ -12,6 +12,7 @@ type EngineEvent<'T when 'T :> iEvent>() =
     eventStore.Add e
     event.Trigger e
     ()
+    
 type TestEvent = Sträng of string interface iEvent
 type TestEvent2 = Test of int interface iEvent
 EngineEvent<TestEvent>.Listen (fun x -> printfn "TestEvent1: %A" x)
