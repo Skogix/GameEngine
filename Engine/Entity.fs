@@ -1,49 +1,54 @@
 module Engine.Entity
 
+open Engine
+open Engine
 open Engine.Domain
 open Engine.Event
 
 type EntityManagerCommand =
   | CreateEntity of AsyncReplyChannel<Entity>
   | DestroyEntity of Entity
+  | GetData of Entity * AsyncReplyChannel<Entity>
   // testing:
-  | GetAllActiveEntities of AsyncReplyChannel<Map<Entity, EntityData>>
-  | GetAllInActiveEntities of AsyncReplyChannel<Map<Entity, EntityData>>
-  | GetAllEntities of AsyncReplyChannel<Map<Entity, EntityData>>
+  | GetAllActiveEntities of AsyncReplyChannel<Map<EntityId, Entity>>
+  | GetAllInActiveEntities of AsyncReplyChannel<Map<EntityId, Entity>>
+  | GetAllEntities of AsyncReplyChannel<Map<EntityId, Entity>>
 type EntityManager() =
   let agent = MailboxProcessor.Start(fun inbox ->
-    let rec loop (entities:Map<Entity, EntityData>) = async {
+    let rec loop (entities:Map<EntityId, Entity>) = async {
       let! command = inbox.Receive()
       match command with
       | CreateEntity rc ->
-        let newEntity, newEntityData =
+        let newEntityId, newEntity =
           match
             entities
             |> Map.toSeq
             |> Seq.tryFind(fun (_, y) -> y.Active = false)
             with
-          | Some (e, data) -> e, { Entity = e
-                                   Generation = data.Generation+1
-                                   Active = true}
-          | None -> {Id=entities.Count}, { Entity = {Id=entities.Count}
-                                           Generation = 0
-                                           Active = true}
-        EngineEvent.Post EntityCreated newEntityData
+          | Some (id, entity) -> id, { Id = id
+                                       Generation = entity.Generation+1
+                                       Active = true}
+          | None -> entities.Count, { Id = entities.Count
+                                      Generation = 0
+                                      Active = true}
+        EngineEvent.Post (EntityCreated newEntity)
         rc.Reply newEntity
-        return! loop (entities.Add (newEntity, newEntityData))
+        return! loop (entities.Add (newEntityId, newEntity))
       | DestroyEntity e ->
-        let newEntityData = {entities.[e] with Active = false}
-        EngineEvent.Post EntityDestroyed newEntityData
-        return! loop (entities.Add(e, newEntityData))
+        let newEntity = {entities.[e.Id] with Active = false}
+        EngineEvent.Post (EntityDestroyed newEntity)
+        return! loop (entities.Add(e.Id, newEntity))
       | GetAllActiveEntities rc ->
-        rc.Reply (entities |> Map.filter(fun _ data -> data.Active = true))
+        rc.Reply (entities |> Map.filter(fun _ entity -> entity.Active = true))
         return! loop entities
       | GetAllInActiveEntities rc ->
-        rc.Reply (entities |> Map.filter(fun _ data -> data.Active = false))
+        rc.Reply (entities |> Map.filter(fun _ entity -> entity.Active = false))
         return! loop entities
       | GetAllEntities rc ->
         rc.Reply entities
         return! loop entities
+      | GetData (e, rc) ->
+        rc.Reply entities.[e.Id]
       return! loop entities
     }
     loop Map.empty
@@ -53,3 +58,5 @@ type EntityManager() =
   member this.GetAllEntities = agent.PostAndReply GetAllEntities
   member this.GetAllActiveEntities = agent.PostAndReply GetAllActiveEntities
   member this.GetAllInActiveEntities = agent.PostAndReply GetAllInActiveEntities
+  member this.GetData e = agent.PostAndReply (fun rc -> GetData (e, rc))
+let entityManager = EntityManager()

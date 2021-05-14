@@ -16,8 +16,8 @@ let eventStore = EventStore()
 type EngineEvent<'T>() =
   static let event = Event<'T>()
   static member Listen(handler) = event.Publish.Add handler
-  static member Post a b =
-    let e = a b
-    Debug.debug a b
+  static member Post<'T> (e:'T) =
+    Debug.debug typedefof<'T> e
     eventStore.Add<'T> typedefof<'T> e
     event.Trigger e
+  static member Post (a, b) = EngineEvent<'T>.Post (a b)

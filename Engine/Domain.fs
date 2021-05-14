@@ -3,14 +3,24 @@ module Engine.Domain
 open System
 let debugEnabled = true
 type EntityId = int
-type Entity = {Id:EntityId}
-type EntityData = {
-  Entity: Entity
+type Entity = {
+  Id: EntityId
   Generation:int
   Active:bool
 }
-type eEvent =
-  | TestEvent of string
-  | EntityCreated of EntityData
-  | EntityDestroyed of EntityData
-type eDebug = DebugMessage of string
+type ComponentPoolId = int
+type Component<'C> =
+    {
+      Type: Type
+      Owner: Entity
+      Data: 'C
+    }
+// vilken funkar bäst?
+type eEvent<'C> =
+  | EntityCreated of Entity
+  | EntityDestroyed of Entity
+//  | ComponentUpdated of Component<'C>
+//type EntityCreated = Entity
+//type EntityDestroyed = Entity
+type ComponentUpdated<'C> = Component<'C>
+type eDebug = string
