@@ -22,5 +22,5 @@ type Engine() =
 //  member this.TryGetFromEntity(e:Entity): 'T option = 0
 type Entity with
 //  member this.Get<'C>(): 'C option = 0
-  member this.Set(c): unit = ()
+  member this.Set(_): unit = ()
   member this.Remove<'C>(): unit = ()

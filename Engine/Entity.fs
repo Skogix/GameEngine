@@ -6,6 +6,7 @@ open Engine.Event
 type EntityManagerCommand =
   | CreateEntity of AsyncReplyChannel<Entity>
   | DestroyEntity of Entity
+  // testing:
   | GetAllActiveEntities of AsyncReplyChannel<Map<Entity, EntityData>>
   | GetAllInActiveEntities of AsyncReplyChannel<Map<Entity, EntityData>>
   | GetAllEntities of AsyncReplyChannel<Map<Entity, EntityData>>
@@ -27,17 +28,18 @@ type EntityManager() =
           | None -> {Id=entities.Count}, { Entity = {Id=entities.Count}
                                            Generation = 0
                                            Active = true}
-        EngineEvent.Post EntityCreated newEntity
+        EngineEvent.Post EntityCreated newEntityData
         rc.Reply newEntity
         return! loop (entities.Add (newEntity, newEntityData))
       | DestroyEntity e ->
-        EngineEvent.Post EntityDestroyed e
-        return! loop (entities.Add(e, {entities.[e] with Active = false}))
+        let newEntityData = {entities.[e] with Active = false}
+        EngineEvent.Post EntityDestroyed newEntityData
+        return! loop (entities.Add(e, newEntityData))
       | GetAllActiveEntities rc ->
-        rc.Reply (entities |> Map.filter(fun e data -> data.Active = true))
+        rc.Reply (entities |> Map.filter(fun _ data -> data.Active = true))
         return! loop entities
       | GetAllInActiveEntities rc ->
-        rc.Reply (entities |> Map.filter(fun e data -> data.Active = false))
+        rc.Reply (entities |> Map.filter(fun _ data -> data.Active = false))
         return! loop entities
       | GetAllEntities rc ->
         rc.Reply entities
@@ -51,4 +53,3 @@ type EntityManager() =
   member this.GetAllEntities = agent.PostAndReply GetAllEntities
   member this.GetAllActiveEntities = agent.PostAndReply GetAllActiveEntities
   member this.GetAllInActiveEntities = agent.PostAndReply GetAllInActiveEntities
-  member this.Agent = agent

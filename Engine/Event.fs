@@ -5,12 +5,13 @@ open System.Diagnostics
 open Engine.Domain
 
 type EventStore() =
+  // todo gor om till mailbox for att slippa mutable data
   let mutable events: (Type * obj) list = []
   member this.Add<'T> t event = events <- events @ [t, event]
   member this.PrintHistory =
     printfn "EventStore: "
     events
-    |> List.iter (fun (t,e) -> printfn $" %A{e}" )
+    |> List.iter (fun (_,e) -> printfn $" %A{e}" )
 let eventStore = EventStore()
 type EngineEvent<'T>() =
   static let event = Event<'T>()

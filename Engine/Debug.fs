@@ -11,9 +11,9 @@ let debug (a:'B -> 'A) (b:'B)=
   let printMessage msg =
     Console.ForegroundColor <- ConsoleColor.Yellow
     printfn msg
-  let e = (a b)
-  match (e.GetType() = typedefof<Debug>) with
+  let event = (a b)
+  match (event.GetType() = typedefof<eDebug>) with
   | true -> printMessage $"{b}"
-  | false -> printDebug $"{e}"
+  | false -> printDebug $"{event}"
   Console.ForegroundColor <- ConsoleColor.Black
   #endif

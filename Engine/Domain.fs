@@ -11,9 +11,6 @@ type EntityData = {
 }
 type eEvent =
   | TestEvent of string
-  | EntityCreated of Entity
-  | EntityDestroyed of Entity
-type Debug = DebugMessage of string
-//type eEntityCreated = EntityCreated of Entity
-//type eEntityDestroyed = EntityDestroyed of Entity
-//type eDebug = Debug of string
+  | EntityCreated of EntityData
+  | EntityDestroyed of EntityData
+type eDebug = DebugMessage of string

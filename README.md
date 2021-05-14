@@ -2,7 +2,7 @@
 versioning
 ```
 - systems
-- component, pools
+0.70 component, pools
 0.60 - debug, logging, api
 0.50 - entity state
 0.40 - eventStore
@@ -21,10 +21,10 @@ Debug
 ```
 todo
 ```
+inkludera entitdata i entity?
 använda records eller rena types for events?
 använda concurrentqueue och skota async-calls själv?
 skippa commands helt och bara calla tryToEvents? låta lyssna på events skota allt
-mer safeguards for entity generations, inkludera entitdata i entity?
 Engine mailbox state
 Component pools
 Component mailbox state?
