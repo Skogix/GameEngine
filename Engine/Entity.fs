@@ -22,11 +22,11 @@ type EntityManager() =
                                    Active = true}
           | None -> entities.Count, { Generation = 0
                                       Active = true}
-        EngineEvent<EntityEvent>.Post (EntityCreated newEntity)
+        EngineEvent.Post (EntityCreated newEntity)
         rc.Reply newEntity
         return! loop (entities.Add (newEntity, newEntityData))
       | DestroyEntity e ->
-        EngineEvent<EntityEvent>.Post (EntityDestroyed e)
+        EngineEvent.Post (EntityDestroyed e)
         return! loop (entities.Add(e, {entities.[e] with Active = false}))
       return! loop entities
     }
