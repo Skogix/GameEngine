@@ -1,5 +1,7 @@
 module Engine.Event
-type iEvent = interface end
+
+open Engine.Domain
+
 type EventStore() =
   let mutable events: (string * iEvent) list = []
   member this.Add event = events <- events @ [event.GetType().Name, event]

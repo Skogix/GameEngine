@@ -1,4 +1,9 @@
-﻿[<EntryPoint>]
-let main argv =
-    printfn "Hello %A" Engine.Domain.test
-    0 // return an integer exit code
+﻿open Engine
+open Engine.Entity
+
+[<EntryPoint>]
+let main _ =
+    let eMan = EntityManager()
+    let entity1 = eMan.CreateEntity
+    entity1 |> printfn "Entity1: %A"
+    0 

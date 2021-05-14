@@ -11,11 +11,8 @@ versioning
 ```
 todo
 ```
-static engineEvent
-EventStore
-Domain events
+mer safeguards for entity generations, inkludera entitdata i entity?
 Engine mailbox state
-Entity management
 Component pools
 Component mailbox state?
 Systems
