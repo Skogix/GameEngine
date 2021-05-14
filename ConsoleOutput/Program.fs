@@ -1,15 +1,17 @@
-﻿open Engine.Entity
-open Engine.Event
+﻿open System
+open Engine.API
+open Engine.Domain
 
 [<EntryPoint>]
 let main _ =
-    let eMan = EntityManager()
-    let e1 = eMan.CreateEntity()
-    let e2 = eMan.CreateEntity()
-    eMan.DestroyEntity e1
-    eMan.GetAllActiveEntities |> printfn "Active: %A"
-    eMan.GetAllInActiveEntities |> printfn "Inactive: %A"
-    let e3 = eMan.CreateEntity()
-    eMan.GetAllActiveEntities |> printfn "AllEntities: %A"
-    eventStore.PrintFormattedHistory
+    Console.Clear()
+    Console.ForegroundColor <- ConsoleColor.Black
+    let e = Engine()
+    let debug msg = e.Post DebugMessage (msg |> string)
+//    let e1 = e.CreateEntity
+//    let e2 = e.CreateEntity
+//    e.DestroyEntity e1
+    let e3 = e.CreateEntity
+    debug "Te |> test"
+    e.EventStore.PrintHistory
     0 

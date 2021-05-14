@@ -21,15 +21,17 @@ type EntityManager() =
             |> Map.toSeq
             |> Seq.tryFind(fun (_, y) -> y.Active = false)
             with
-          | Some (e, data) -> e, { Generation = data.Generation+1
+          | Some (e, data) -> e, { Entity = e
+                                   Generation = data.Generation+1
                                    Active = true}
-          | None -> {Id=entities.Count}, { Generation = 0
+          | None -> {Id=entities.Count}, { Entity = {Id=entities.Count}
+                                           Generation = 0
                                            Active = true}
-        EngineEvent.Post (EntityCreated newEntity)
+        EngineEvent.Post EntityCreated newEntity
         rc.Reply newEntity
         return! loop (entities.Add (newEntity, newEntityData))
       | DestroyEntity e ->
-        EngineEvent.Post (EntityDestroyed e)
+        EngineEvent.Post EntityDestroyed e
         return! loop (entities.Add(e, {entities.[e] with Active = false}))
       | GetAllActiveEntities rc ->
         rc.Reply (entities |> Map.filter(fun e data -> data.Active = true))

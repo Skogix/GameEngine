@@ -1,19 +1,22 @@
 module Engine.Event
 
 open System
+open System.Diagnostics
+open Engine.Domain
 
 type EventStore() =
   let mutable events: (Type * obj) list = []
-  member this.Add event = events <- events @ [event.GetType(), event]
-  member this.PrintFormattedHistory =
-    printfn "Events: "
+  member this.Add<'T> t event = events <- events @ [t, event]
+  member this.PrintHistory =
+    printfn "EventStore: "
     events
-    |> List.map (fun (_,e) -> sprintf $"\t{e}")
-    |> List.iter (printfn "%s")
+    |> List.iter (fun (t,e) -> printfn $" %A{e}" )
 let eventStore = EventStore()
-type EngineEvent() =
-  static let event = Event<_>()
+type EngineEvent<'T>() =
+  static let event = Event<'T>()
   static member Listen(handler) = event.Publish.Add handler
-  static member Post e =
-    eventStore.Add e
+  static member Post a b =
+    let e = a b
+    Debug.debug a b
+    eventStore.Add<'T> typedefof<'T> e
     event.Trigger e
