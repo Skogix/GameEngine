@@ -1,12 +1,15 @@
 module Engine.Event
 
 open System
-open Engine.Domain
 
 type EventStore() =
   let mutable events: (Type * obj) list = []
   member this.Add event = events <- events @ [event.GetType(), event]
-  member this.History = events
+  member this.PrintFormattedHistory =
+    printfn "Events: "
+    events
+    |> List.map (fun (_,e) -> sprintf $"\t{e}")
+    |> List.iter (printfn "%s")
 let eventStore = EventStore()
 type EngineEvent() =
   static let event = Event<_>()
@@ -14,4 +17,3 @@ type EngineEvent() =
   static member Post e =
     eventStore.Add e
     event.Trigger e
-    ()
