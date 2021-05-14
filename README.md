@@ -1,7 +1,8 @@
 # Skogix GameEngine
 versioning
 ```
-- systems
+0.90 - system
+0.80 - filter
 0.70 - component, pools
 0.60 - debug, logging, api
 0.50 - entity state
@@ -12,6 +13,7 @@ versioning
 ```
 todo
 ```
+fixa så debug inte hamnar i store
 använda concurrentqueue och skota async-calls själv?
 
 Engine mailbox state

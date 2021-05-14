@@ -18,12 +18,12 @@ type Engine() =
   // testing
   member this.EntityManager = eMan
   member this.EventStore = eventStore
-//type Component<'T> =
-//  member this.RemoveFromEntity (e:Entity): unit= 0
-//  member this.AddToEntity (component:'T) (e:Entity) = 0
-//  member this.TryGetFromEntity(e:Entity): 'T option = 0
 type Entity with
-//  member this.Get<'C>(): 'C option = 0
+  member this.TryGet<'C>() =
+    Pool<'C>.TryGet this
   member this.Set(c:'T): unit = Pool<'T>.Set this c
-  member this.Remove<'C>(): unit = ()
+  member this.Destroy = entityManager.DestroyEntity this
+//  member this.Remove<'C>(): unit = ()
   member this.Data = entityManager.GetData this
+type Component<'C> with
+  member this.Update (data:'C) = Pool<'C>.Set this.Owner data

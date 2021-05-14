@@ -1,7 +1,5 @@
 module Engine.Entity
 
-open Engine
-open Engine
 open Engine.Domain
 open Engine.Event
 
@@ -31,12 +29,12 @@ type EntityManager() =
           | None -> entities.Count, { Id = entities.Count
                                       Generation = 0
                                       Active = true}
-        EngineEvent.Post (EntityCreated newEntity)
+        EngineEvent.Post{createdEntity=newEntity}
         rc.Reply newEntity
         return! loop (entities.Add (newEntityId, newEntity))
       | DestroyEntity e ->
         let newEntity = {entities.[e.Id] with Active = false}
-        EngineEvent.Post (EntityDestroyed newEntity)
+        EngineEvent.Post{destroyedEntity=newEntity}
         return! loop (entities.Add(e.Id, newEntity))
       | GetAllActiveEntities rc ->
         rc.Reply (entities |> Map.filter(fun _ entity -> entity.Active = true))

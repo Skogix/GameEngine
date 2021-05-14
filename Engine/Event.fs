@@ -1,8 +1,6 @@
 module Engine.Event
 
 open System
-open System.Diagnostics
-open Engine.Domain
 
 type EventStore() =
   // todo gor om till mailbox for att slippa mutable data
@@ -11,13 +9,13 @@ type EventStore() =
   member this.PrintHistory =
     printfn "EventStore: "
     events
-    |> List.iter (fun (_,e) -> printfn $" %A{e}" )
+    |> List.iter (fun (t,e) -> printfn $" {t.Name}\n  {e}" )
 let eventStore = EventStore()
 type EngineEvent<'T>() =
   static let event = Event<'T>()
   static member Listen(handler) = event.Publish.Add handler
   static member Post<'T> (e:'T) =
-    Debug.debug typedefof<'T> e
+    Debug.debug<'T> e
     eventStore.Add<'T> typedefof<'T> e
     event.Trigger e
   static member Post (a, b) = EngineEvent<'T>.Post (a b)

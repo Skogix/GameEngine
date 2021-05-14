@@ -3,7 +3,7 @@ module Engine.Debug
 open System
 open Engine.Domain
 
-let debug<'T, 'E> (t:'T) (e:'E) =
+let debug<'T> event =
   #if DEBUG
   let printDebug msg =
     Console.ForegroundColor <- ConsoleColor.Gray
@@ -11,8 +11,8 @@ let debug<'T, 'E> (t:'T) (e:'E) =
   let printMessage msg =
     Console.ForegroundColor <- ConsoleColor.Yellow
     printfn msg
-  match (e.GetType() = typedefof<eDebug>) with
-  | true -> printMessage $"{e}"
-  | false -> printDebug $"{t}:{e}"
+  match (event.GetType() = typedefof<DebugMessage>) with
+  | true -> printMessage $"{event}"
+  | false -> printDebug $"{typedefof<'T>.Name}\n {event}"
   Console.ForegroundColor <- ConsoleColor.Black
   #endif
