@@ -3,7 +3,7 @@ versioning
 ```
 - systems
 - component, pools
-- debug, logging
+0.60 debug, logging
 0.50 - entity state
 0.40 - eventStore
 0.30 - engineEvents
