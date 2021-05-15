@@ -1,5 +1,7 @@
 module Engine.Entity
 
+open System
+open System.Collections.Generic
 open Engine.Domain
 open Engine.Event
 
@@ -25,10 +27,10 @@ type EntityManager() =
             with
           | Some (id, entity) -> id, { Id = id
                                        Generation = entity.Generation+1
-                                       Active = true}
+                                       Active = true }
           | None -> entities.Count, { Id = entities.Count
                                       Generation = 0
-                                      Active = true}
+                                      Active = true }
         EngineEvent.Post{createdEntity=newEntity}
         rc.Reply newEntity
         return! loop (entities.Add (newEntityId, newEntity))
