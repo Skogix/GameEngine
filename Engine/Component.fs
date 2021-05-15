@@ -25,9 +25,10 @@ type Pool<'T>() =
     Pool<'T>.Add<'T> entity data
     c
   static member Update<'T> entity (data:'T) =
-    let c = createComponent entity data
-    EngineEvent.Post<ComponentUpdated<'T>> {updatedComponent=c}
-    pool <- pool.Add(entity,c)
+    let currentComponent = Pool<'T>.Get entity
+    let newData = {currentComponent with Data=data}
+    pool <- pool.Add(entity, newData)
+    ()
   static member AllEntities = [for map in pool do map.Key]
   static member AllComponents = [for map in pool do map.Value]
   static member TryGet = pool.TryFind

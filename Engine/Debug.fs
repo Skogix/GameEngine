@@ -9,6 +9,7 @@ let printMessage msg =
   Console.ForegroundColor <- ConsoleColor.Yellow
   printfn $"{msg}"
 let debugHandler<'T> event t =
-  match t.GetType().Name with
-  | "DebugMessage" -> printMessage (t |> string)
-  | _ -> printDebug (t |> string)
+  if debugEnabled then 
+    match t.GetType().Name with
+    | "DebugMessage" -> printMessage (t |> string)
+    | _ -> printDebug (t |> string)

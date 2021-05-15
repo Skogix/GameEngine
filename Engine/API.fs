@@ -8,6 +8,8 @@ open Engine.Event
 type Tag = {Tag:Type}
 type Engine() =
   let eMan = entityManager
+  let mutable runSystems: iRunSystem list = []
+  let mutable listenSystems: iListenSystem list = []
   member this.CreateEntity = eMan.CreateEntity()
   member this.DestroyEntity = eMan.DestroyEntity
   member this.Post (e:'T) = EngineEvent<'T>.Post e
@@ -17,9 +19,12 @@ type Engine() =
   member this.Filter3<'A, 'B, 'C >() = Filter.Filter3<'A, 'B, 'C>
   member this.AddComponent<'C> data entity = Pool<'C>.Add entity data; entity
   member this.AddTag<'T> (data:'A) entity = Pool<'A>.Add entity data
-  member this.Run(): unit= ()
-//  member this.CreateSystem():iSystem = 0
-//  member this.AddSystem(system: iSystem): unit = ()
+  member this.AddListenSystem s = listenSystems <- s :: listenSystems
+  member this.AddRunSystem s = runSystems <- s :: runSystems
+  member this.Init() =
+    runSystems |> List.iter (fun x -> x.Init())
+    listenSystems |> List.iter (fun x -> x.Init())
+  member this.Run()= runSystems |> List.iter (fun x -> x.Run())
   // testing
   member this.EntityManager = eMan
   member this.EventStore = eventStore

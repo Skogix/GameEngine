@@ -1,7 +1,7 @@
 module Engine.Domain
 
 open System
-let debugEnabled = true
+let mutable debugEnabled = true
 type EntityId = int
 type Entity = {
   Id: EntityId

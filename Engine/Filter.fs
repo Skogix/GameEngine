@@ -17,7 +17,7 @@ let Filter2<'A, 'B> =
   let es = FilterEntity2<'A, 'B>
   let a = (es |> GetComponentsFromEntityList<'A>)
   let b = (es |> GetComponentsFromEntityList<'B>)
-  (es, a, b)
+  es |> List.zip3 a b
 let Filter3<'A, 'B, 'C> =
   let es = FilterEntity3<'A,'B,'C>
   let a = (es |> GetComponentsFromEntityList<'A>)
