@@ -1,7 +1,6 @@
 module ConsoleOutput.Scratch
 
 open System
-open System.Threading
 open Engine.API
 open Engine.Domain
 open Engine.System

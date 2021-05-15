@@ -1,7 +1,5 @@
 module Engine.Entity
 
-open System
-open System.Collections.Generic
 open Engine.Domain
 open Engine.Event
 

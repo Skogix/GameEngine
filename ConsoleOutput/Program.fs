@@ -2,9 +2,6 @@
 open System.Threading
 open ConsoleOutput
 open Engine
-open Engine.API
-open Engine.Component
-open Engine.System
 open Engine.Domain
 open Scratch
 [<EntryPoint>]

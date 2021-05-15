@@ -29,8 +29,8 @@ type Engine() =
   member this.EntityManager = eMan
   member this.EventStore = eventStore
 type Entity with
-  member this.TryGet<'C>() =
-    Pool<'C>.TryGet this
+  member this.TryGet<'C>() = Pool<'C>.TryGet this
+  member this.Get<'C>() = Pool<'C>.Get this
   member this.Update(c:'T) = Pool<'T>.Update this c
   member this.Add(c:'T) = Pool<'T>.Add this c
   member this.AddAndGet(c:'T) = Pool<'T>.AddAndGet this c

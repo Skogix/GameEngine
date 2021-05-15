@@ -2,7 +2,6 @@ module Engine.Event
 
 open System
 open Engine
-open Domain
 open Debug
 type EventStore() =
   // todo gor om till mailbox for att slippa mutable data
