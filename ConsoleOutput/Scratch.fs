@@ -7,6 +7,7 @@ open Engine.Domain
 open Engine.System
 
 let e = Engine()
+// Basic types som kan bygga nya types
 type InputChar = char
 type Health = {HealthAmount: int}
 type Attack = {AttackAmount: int}
@@ -20,11 +21,13 @@ type Position = {
   x: int
   y: int
 }
-// todo borde vara ett snyggare sätt att losa?
-// annars så borde det här vara ett bra ställe att DIa måsten?
+
+// Tomma types/Data for att lysstna på events
 type Combat = unit
 type Renderable = unit
 type Player = unit
+
+// Blueprints som skapar nya storre types av data
 let addCombat health attack defense entity =
   entity
   |> e.AddComponent{HealthAmount=health}
@@ -45,10 +48,13 @@ let createMonster =
   e.CreateEntity
   |> addCombat 30 4 1
   |> addRenderable (3,3) 'M'
+  
+// Events som skickar information
 type TryMove = {
   From: Entity
   To: Position
 }
+// Systems som lyssnar på events som händer och gor något därefter
 type MoveSystem() =
   let handler (event:TryMove) =
     // kolla vad är på pos men just nu bara updatepos
@@ -56,14 +62,7 @@ type MoveSystem() =
   interface iListenSystem with
     member this.Init() =
       do e.Listen<TryMove> handler
-type RenderSystem() =
-  interface iRunSystem with
-    member this.Init() = ()
-    member this.Run() =
-      Console.Clear()
-      for pos, glyph, entity in e.Filter2<Position, Glyph>() do
-        Console.SetCursorPosition(pos.Data.x, pos.Data.y)
-        printf $"{glyph.Data.Glyph}"
+// RunSystems som kors varje frame/update
 type InputSystem() =
   interface iRunSystem with
     member this.Init() = ()
@@ -78,3 +77,11 @@ type InputSystem() =
         | ConsoleKey.LeftArrow -> e.Post<TryMove>{From=entity;To={x=playerPos.x-1;y=playerPos.y}}
         | ConsoleKey.RightArrow -> e.Post<TryMove>{From=entity;To={x=playerPos.x+1;y=playerPos.y}}
         | _ -> ()
+type RenderSystem() =
+  interface iRunSystem with
+    member this.Init() = ()
+    member this.Run() =
+      Console.Clear()
+      for pos, glyph, entity in e.Filter2<Position, Glyph>() do
+        Console.SetCursorPosition(pos.Data.x, pos.Data.y)
+        printf $"{glyph.Data.Glyph}"
