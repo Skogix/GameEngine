@@ -17,25 +17,25 @@ type Player = {
 // Direction är någon av up, down, left, right
 type Direction = Up | Down | Left | Right
 
-// engine är hela engine bakom allt, doesnt matter osv
+// engine är hela engine bakom allt, doesnt matter osv (är en shortcut till basic-funktioner och kanske ett par object
+// men ska bytas ut till "agents" eller  "object" som init:ar skit som inte betyder något atm
 let engine = Engine()
 
 // events är bara en typ som innehåller data
 // ett move-event är data som är en tuple/datatyp som är <x, y>
 // här for det är enkelt så är from=en entity, to= ny position
 type MoveEvent = {
-  From: Entity
+  From: Entity // ville hålla det enkelt, så egentligen så är det en pos -> pos, men är något som byter position
   To: Position  
 }
 // onEvent är ingen egen typ, men en funktion som svarar på ett event och returnar Null)
-// (men den lyssnar på events av typ X och gor något med X utan return)
-// (om den vill påverka så skickar den ett nytt event))
+// (men den lyssnar på events av typ X och kan inte gora något utan att skicka ett nytt event)
 type OnMoveEvent() =
-  // handler är bara en funktion som tar MoveEvent och returnar null
+  // handler är bara en funktion som tar MoveEvent och returnar "null"/oftast skickar ett event
   let handler (event:MoveEvent) =
-    // moveevent är typ ett argument med två values, from (entity/container) to (nyPos)
+    // moveevent är typ ett argument med två values/en tuple (from (entity/container) to (nyPos))
     event.From.Update{x=event.To.x;y=event.To.y} // updatea position (engine skickar events om update)
-  do engine.Listen<MoveEvent> handler // (regga handler som subscriber till moveEvent)
+  do engine.Listen<MoveEvent> handler // (regga "eventhandler" som "subscriber" till moveEvent)
 // ett enkelt system/funktionalitet som kors varje update, dvs kolla inputkey
 type InputSystem() =
   member this.Run() = // run kors varje tick/updatecycle
