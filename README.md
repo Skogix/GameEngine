@@ -13,6 +13,8 @@ versioning
 ```
 todo
 ```
+blueprints for att ha recursive components i samma entity
+debug hämta alla components från en entity?
 fixa så debug inte hamnar i store
 använda concurrentqueue och skota async-calls själv?
 
