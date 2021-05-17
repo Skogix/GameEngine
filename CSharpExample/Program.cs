@@ -6,17 +6,14 @@ using static Engine.cAPI.Engine;
 
 namespace CSharpExample
 {
-    interface IRunSystem
-    { void Run(cAPI.Engine engine); }
-    interface IListenSystem
-    { void Init(cAPI.Engine engine); }
+    interface IRunSystem { void Run(cAPI.Engine engine); }
+    interface IListenSystem { void Init(cAPI.Engine engine); }
     
     /// <summary>
     /// En entity är bara ett id som components kopplas till
     /// typ en container for olika data/components
     /// </summary>
-    public record Entity
-    { public int Id; }
+    public record Entity { public int Id; }
     /// 
     /// En component är bara dum readonly-data som fästs till en entity
     ///
@@ -94,6 +91,8 @@ namespace CSharpExample
         {
             var engine = new cAPI.Engine(); // skapa engine-object pga c#
             engine.AddSystem(new GetInputSystem()); // lägg till run-event
+            var player = engine.CreateEntity(); // skapa en ny entity
+            player.AddComponent(new PositionComponent() {X = 4, Y = 4}); // lägg till component till entity
             engine.Run(); // kor alla runsystems och lite annat krafs
         }
     }

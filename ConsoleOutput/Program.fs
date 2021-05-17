@@ -1,29 +1,39 @@
 ﻿open System
-open System.Threading
 open Engine
-open Engine.Domain
+open Engine.API
+open Engine.System
+open Domain
+
+//type Entity = int
+type PositionComponent = {x:int;y:int}
+type OnKeyPressedEvent = {key:ConsoleKey;entity:Entity}
+type MovedEvent = {newPos:PositionComponent;entity:Entity}
+type GetInputSystem() =
+  interface iRunSystem with
+    member this.Init() = ()
+    member this.Run() =
+      for pos, ent in Filter.Filter1<PositionComponent> do
+        Engine.Post{
+          key=Console.ReadKey(true).Key
+          entity=ent
+        }
+type onKeyPressedEvent() =
+  interface iListenSystem with
+    member this.Init() = do Engine.Listen (fun (x:OnKeyPressedEvent) ->
+      let oldPos = x.entity.Get<PositionComponent>()
+      let newPos =
+        match x.key with
+        | ConsoleKey.UpArrow -> { x = oldPos.Data.x;y = oldPos.Data.y - 1 }
+        | ConsoleKey.DownArrow -> { x = oldPos.Data.x;y = oldPos.Data.y + 1}
+        | ConsoleKey.LeftArrow -> { x = oldPos.Data.x - 1;y = oldPos.Data.y }
+        | ConsoleKey.RightArrow -> { x = oldPos.Data.x + 1;y = oldPos.Data.y }
+      Engine.Post{ newPos = newPos
+                   entity = x.entity }
+      )
 [<EntryPoint>]
 let main _ =
-//  Console.Clear()
-//  Console.ForegroundColor <- ConsoleColor.Black
-//  debugEnabled <- false
-//  let debug msg = e.Post(DebugMessage (msg |> string))
-//  let skogix = createPlayer
-//  let monster = createMonster
-//  
-//  // add systems
-////  e.AddRunSystem (RenderSystem())
-//  e.AddRunSystem (InputSystem())
-//  e.AddRunSystem (RenderSystem())
-//  e.AddListenSystem (MoveSystem())
-//  
-//  e.Init()
-//  e.Run()
-//  
-//  while true do
-//    debug (Filter.Filter2<Position, Glyph>)
-//    printfn "-------------------------------\n"
-//    e.Run()
-//  Thread.Sleep 200
-//  e.EventStore.PrintHistory
+  let engine = Engine.API.Engine()
+  engine.AddRunSystem (GetInputSystem())
+  engine.AddListenSystem (onKeyPressedEvent())
+  engine.Run()
   0
