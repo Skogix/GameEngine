@@ -12,7 +12,8 @@ type EventStore() =
     events
     |> List.iter (fun (t,e) -> printfn $" {t.Name}\n  {e}" )
 let eventStore = EventStore()
-type EngineEvent<'T>() =
+
+type EventManager<'T>() =
   static let event = Event<'T>()
   static member Listen(handler) = event.Publish.Add handler
   static member Post<'T> (e:'T) =
@@ -20,4 +21,4 @@ type EngineEvent<'T>() =
     debugHandler<'T> typedefof<'T> e
     eventStore.Add<'T> typedefof<'T> e
     event.Trigger e
-  static member Post (a, b) = EngineEvent<'T>.Post (a b)
+  static member Post (a, b) = EventManager<'T>.Post (a b)

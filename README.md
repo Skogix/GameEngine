@@ -1,6 +1,7 @@
 # Skogix GameEngine
 versioning
 ```
+1.00 - f#/c#-game example
 0.90 - system
 0.80 - filter
 0.70 - component, pools
@@ -13,6 +14,7 @@ versioning
 ```
 todo
 ```
+skriva egna zipx-funktioner till filters
 blueprints for att ha recursive components i samma entity
 debug hämta alla components från en entity?
 fixa så debug inte hamnar i store

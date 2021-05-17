@@ -29,12 +29,12 @@ type EntityManager() =
           | None -> entities.Count, { Id = entities.Count
                                       Generation = 0
                                       Active = true }
-        EngineEvent.Post{createdEntity=newEntity}
+        EventManager.Post{createdEntity=newEntity}
         rc.Reply newEntity
         return! loop (entities.Add (newEntityId, newEntity))
       | DestroyEntity e ->
         let newEntity = {entities.[e.Id] with Active = false}
-        EngineEvent.Post{destroyedEntity=newEntity}
+        EventManager.Post{destroyedEntity=newEntity}
         return! loop (entities.Add(e.Id, newEntity))
       | GetAllActiveEntities rc ->
         rc.Reply (entities |> Map.filter(fun _ entity -> entity.Active = true))

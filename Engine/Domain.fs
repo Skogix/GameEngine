@@ -15,11 +15,11 @@ type Component<'C> = {
       Owner: Entity
       Data: 'C }
 
+// Engine events
 type ComponentUpdated<'C> = {updatedComponent: Component<'C>}
 type EntityCreated =  {createdEntity: Entity}
 type EntityDestroyed = {destroyedEntity: Entity}
-//type EntityCreated = Entity
-//type EntityDestroyed = Entity
+
 type Debug =
   | DebugMessage of string
   | Wawa of string // måste ha två alternativ for gettype().Name ska returnera rätt -.-

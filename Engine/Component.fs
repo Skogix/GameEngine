@@ -13,16 +13,16 @@ type Pool<'T>() =
   static let mutable pool: Map<Entity, Component<'T>> = Map.empty
   static member AddTag<'T> entity (data:'T) =
     let c = createComponent entity data
-    EngineEvent.Post<ComponentUpdated<'T>> {updatedComponent=c}
+    EventManager.Post<ComponentUpdated<'T>> {updatedComponent=c}
     pool <- pool.Add(entity,c)
     entity
   static member Add<'T> entity (data:'T) =
     let c = createComponent entity data
-    EngineEvent.Post<ComponentUpdated<'T>> {updatedComponent=c}
+    EventManager.Post<ComponentUpdated<'T>> {updatedComponent=c}
     pool <- pool.Add(entity,c)
   static member AddAndGet<'T> entity (data:'T) =
     let c = createComponent entity data
-    Pool<'T>.Add<'T> entity data
+    Pool<'T>.Add<'T> entity data // todo ser inte rätt ut, skapar dubbel?
     c
   static member Update<'T> entity (data:'T) =
     let currentComponent = Pool<'T>.Get entity
