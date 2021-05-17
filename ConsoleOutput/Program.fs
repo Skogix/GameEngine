@@ -20,13 +20,14 @@ type GetInputSystem() =
 type onKeyPressedEvent() =
   interface iListenSystem with
     member this.Init() = do Engine.Listen (fun (x:OnKeyPressedEvent) ->
-      let oldPos = x.entity.Get<PositionComponent>()
+      let oldPos = x.entity.Get<PositionComponent>().Data
       let newPos =
         match x.key with
-        | ConsoleKey.UpArrow -> { x = oldPos.Data.x;y = oldPos.Data.y - 1 }
-        | ConsoleKey.DownArrow -> { x = oldPos.Data.x;y = oldPos.Data.y + 1}
-        | ConsoleKey.LeftArrow -> { x = oldPos.Data.x - 1;y = oldPos.Data.y }
-        | ConsoleKey.RightArrow -> { x = oldPos.Data.x + 1;y = oldPos.Data.y }
+        | ConsoleKey.UpArrow -> {    x = oldPos.x;    y = oldPos.y - 1 }
+        | ConsoleKey.DownArrow -> {  x = oldPos.x;    y = oldPos.y + 1}
+        | ConsoleKey.LeftArrow -> {  x = oldPos.x - 1;y = oldPos.y }
+        | ConsoleKey.RightArrow -> { x = oldPos.x + 1;y = oldPos.y }
+      x.entity.Set{x=newPos.x;y=newPos.y}
       Engine.Post{ newPos = newPos
                    entity = x.entity }
       )
