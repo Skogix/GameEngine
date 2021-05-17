@@ -91,6 +91,7 @@ namespace CSharpExample
         {
             var engine = new cAPI.Engine(); // skapa engine-object pga c#
             engine.AddSystem(new GetInputSystem()); // lägg till run-event
+            engine.AddSystem(new OnKeyPressedEvent()); // lägg till run-event
             var player = engine.CreateEntity(); // skapa en ny entity
             player.AddComponent(new PositionComponent() {X = 4, Y = 4}); // lägg till component till entity
             engine.Run(); // kor alla runsystems och lite annat krafs
