@@ -21,9 +21,10 @@ type EventListeners<'event>() =
   static member Listen (handler:'event -> unit) =
     Listeners.Add handler
 type EventManager() =
-  member this.AllEvents = skogixEventStore.GetAll()
-  member this.Post<'event>(event) =
-    skogixEventStore.Append event
+  let eventStore = EventStore()
+  member this.AllEvents = eventStore.GetAll()
+  member this.Post(event:'event) =
+    eventStore.Append [event]
     EventListeners<'event>.Post event
   member this.Listen<'event> (handler) =
     EventListeners<'event>.Listen handler

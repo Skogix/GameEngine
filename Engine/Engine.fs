@@ -9,9 +9,9 @@ type Engine() =
   member this._componentManager = componentManager
   member this.CreateEntity() =
     let e = entityManager.CreateEntity()
-    eventManager.Post {entityCreated=e}
+    eventManager.Post{entityCreated=e}
     e
   member this.AddComponent<'t> entity (data:'t) =
     let c = componentManager.Add entity data
-    eventManager.Post {componentUpdated=c}
+    eventManager.Post{componentUpdated=c}
     c
