@@ -1,4 +1,4 @@
-module Engine.EventManager
+module Engine.Event
 open System.Collections.Generic
 open System.Diagnostics
 open Engine
@@ -11,8 +11,8 @@ type EventListeners<'event>() =
       listener event
   static member Listen (handler:'event -> unit) =
     Listeners.Add handler
-type EventManager<'event> =
+type EngineEvent<'event> =
   static member Post(event:'event) =
     EventListeners<'event>.Post event
-  static member Listen<'event> (handler) =
+  static member Listen<'event> handler =
     EventListeners<'event>.Listen handler

@@ -1,6 +1,7 @@
 module Engine.EntityManager
 
 open Engine.Domain
+open Engine.Event
 
 type EntityManager() =
   static let mutable entities = Map.empty
@@ -18,9 +19,11 @@ type EntityManager() =
                   Generation = 0
                   Active = true}
     entities.Add(newEntity.Id, newEntity) |> ignore
+    EngineEvent<EntityCreated>.Post {entityCreated=newEntity}
     newEntity
   static member DestroyEntity entity =
     let destroyedEntity = {entity with Active = false}
+    EngineEvent<EntityDestroyed>.Post {entityDestroyed=destroyedEntity}
     entities.Add(destroyedEntity.Id, destroyedEntity) |> ignore
 //type EntityManager() =
 //  let mailbox = MailboxProcessor.Start(fun inbox ->

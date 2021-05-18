@@ -10,7 +10,7 @@ let FilterEntity3<'a,'b,'c> =
   |> List.filter(Pool<'b>.ContainsEntity)
   |> List.filter(Pool<'c>.ContainsEntity)
 let GetComponentsFromEntityList<'a> (es:Entity list) =
-  es |> List.map Pool<'a>.Get
+  es |> List.map Pool<'a>.HardGet
 let Filter1<'a> =
   let es = FilterEntity1<'a>
   let a = (es |> GetComponentsFromEntityList<'a>)
@@ -19,7 +19,7 @@ let Filter2<'a,'b> =
   let es = FilterEntity2<'a,'b>
   let a = (es |> GetComponentsFromEntityList<'a>)
   let b = (es |> GetComponentsFromEntityList<'b>)
-  a |> List.zip b  
+  b |> List.zip a
 let Filter3<'a,'b,'c> =
   let es = FilterEntity3<'a,'b,'c>
   let a = (es |> GetComponentsFromEntityList<'a>)
