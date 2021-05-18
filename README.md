@@ -1,14 +1,14 @@
 # Skogix GameEngine
 versioning
 ```
-1.00 - f#/c#-game example
-0.90 - system
-0.80 - filter
-0.70 - component, pools
-0.60 - debug, logging, api
-0.50 - entity state
-0.40 - eventStore
-0.30 - engineEvents
+f#/c#-game example
+system
+filter
+component, pools
+debug, logging, api
+entity state
+eventStore
+engineEvents
 0.20 - setup/planning
 0.10 - readme, project setup, init
 ```
