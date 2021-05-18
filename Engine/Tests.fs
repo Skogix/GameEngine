@@ -1,6 +1,5 @@
 module Engine.Tests
 open Engine
-open EventStore
 open Engine.Domain
 open Expecto
 open Expecto.Expect
@@ -32,9 +31,9 @@ let tests =
     test "wawa" {
       Given[
         // tomt
-        EntityCreated TestData.entity
+//        EntityCreated TestData.entity
       ]
-      |> Then [EntityCreated TestData.entity]
+      |> Then []
     }
   ]
 let runTests() = runTests defaultConfig tests |> ignore

@@ -1,15 +1,22 @@
 module Engine.API
 
+open Engine.Component
+open Engine.Domain
 open Engine.Engine
-open Engine.EntityManager
+open Engine.EventManager
+open EntityManager
 
 type Engine with
-  member this.huhu = 0
-//type Engine() =
-//  let entityManager = EntityManager()
-//  let eventStore = Engine.EventStore.initEventStore()
-//  member this.CreateEntity =
-//    let e = entityManager.CreateEntity
-//    eventStore.Append [Domain.EntityCreated e]
-//    e
-//  member this.EventStore = eventStore
+  member this.CreateEntity() =
+    let e = EntityManager.CreateEntity
+    EventManager<EntityCreated>.Post{entityCreated=e}
+    e
+  member this.DestroyEntity e =
+    let destroyed = EntityManager.CreateEntity
+    EventManager.Post{entityDestroyed=destroyed}
+  member this.AddComponent<'t> entity (data:'t) =
+    let c = Pool<'t>.Add entity data 
+    EventManager.Post{componentUpdated=c}
+    c
+type Entity with
+  member this.Destroy() = EntityManager.DestroyEntity this

@@ -1,17 +1,18 @@
 module Engine.Engine
+open System.Collections.Generic
 open Domain
+open Engine.Component
+open EventManager
+open EntityManager
+open Engine.System
 type Engine() =
-  let eventManager = EventManager.EventManager()
-  let entityManager = EntityManager.EntityManager()
-  let componentManager = ComponentManager.ComponentManager()
-  member this._eventManager = eventManager
-  member this._entityManager = entityManager
-  member this._componentManager = componentManager
-  member this.CreateEntity() =
-    let e = entityManager.CreateEntity()
-    eventManager.Post{entityCreated=e}
-    e
-  member this.AddComponent<'t> entity (data:'t) =
-    let c = componentManager.Add entity data
-    eventManager.Post{componentUpdated=c}
-    c
+  let iRunSystems = List<iRunSystem>()
+  let iListenSystems = List<iListenSystem>()
+  member this.AddRunSystem<'s when 's :> iRunSystem>(system) = iRunSystems.Add system
+  member this.AddListenSystem<'s when 's :> iListenSystem>(system) = iListenSystems.Add system
+  member this.Init() =
+    for system in iListenSystems do
+      system.Init()
+  member this.Run() =
+    for system in iRunSystems do
+      system.Run()
