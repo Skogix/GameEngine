@@ -11,6 +11,9 @@ type Engine() =
     let e = entityManager.CreateEntity()
     eventManager.Post{entityCreated=e}
     e
+  member this.DestroyEntity e =
+    let destroyed = entityManager.DestroyEntity e
+    eventManager.Post{entityDestroyed=destroyed}
   member this.AddComponent<'t> entity (data:'t) =
     let c = componentManager.Add entity data
     eventManager.Post{componentUpdated=c}

@@ -1,6 +1,5 @@
 module Engine.TestExamples
 
-open System.ComponentModel.Design
 
 module TestDomain =
   type Flavour =

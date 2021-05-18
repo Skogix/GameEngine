@@ -13,10 +13,6 @@ type Component<'c> = {
   Owner: Entity
   Data: 'c
 }
-// ogillar hur discriminated unions funkar, records verkar enklare
-type Event =
-  | EntityCreated of Entity
-  | EntityDestroyed of Entity
 type EntityCreated = {entityCreated:Entity}
 type EntityDestroyed = {entityDestroyed:Entity}
 type ComponentUpdated<'t> = {componentUpdated:Component<'t>}
