@@ -2,9 +2,9 @@ module Engine.Debug
 
 open System
 
-let mutable enableDebug = true
+let mutable debugEnabled = true
 let debug x =
-  if enableDebug then
+  if debugEnabled then
     Console.ForegroundColor <- ConsoleColor.Gray
     printfn "DEBUG::\n %A" x
     Console.ForegroundColor <- ConsoleColor.Black

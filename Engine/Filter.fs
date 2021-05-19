@@ -25,4 +25,4 @@ let Filter3<'a,'b,'c> =
   let a = (es |> GetComponentsFromEntityList<'a>)
   let b = (es |> GetComponentsFromEntityList<'b>)
   let c = (es |> GetComponentsFromEntityList<'c>)
-  a |> List.zip3 b c 
+  c |> List.zip3 a b

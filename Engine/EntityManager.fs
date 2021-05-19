@@ -5,7 +5,7 @@ open Engine.Event
 
 type EntityManager() =
   static let mutable entities = Map.empty
-  static member CreateEntity =
+  static member CreateEntity() =
     let newEntity =
       match
         entities
@@ -18,7 +18,7 @@ type EntityManager() =
       | None -> { Id = entities.Count
                   Generation = 0
                   Active = true}
-    entities.Add(newEntity.Id, newEntity) |> ignore
+    entities <- entities.Add(newEntity.Id, newEntity) 
     EngineEvent<EntityCreated>.Post {entityCreated=newEntity}
     newEntity
   static member DestroyEntity entity =
