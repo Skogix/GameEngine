@@ -12,5 +12,5 @@ type AttackCommand = {attacker:Entity;defender:Entity}
 type KeyPressedEvent = {keyPressed:ConsoleKey;entity:Entity}
 type MovedEvent = {movedToPos:PositionComponent;entity:Entity}
 type CollisionEvent = {collider:Entity;collidedWith:Entity}
-type DamageTakenEvent = {healthComponent:Component<HealthComponent>;entity:Entity}
+type DamageTakenEvent = {damageAmount:int;healthComponent:Component<HealthComponent>;entity:Entity}
 type DeathEvent = {deadEntity:Entity}

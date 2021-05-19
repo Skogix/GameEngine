@@ -3,6 +3,7 @@ module ConsoleOutput.RunSystems
 open System
 open System.Threading
 open ConsoleOutput.Components
+open Engine.API
 open Engine
 open Engine.Debug
 open Engine.Event
@@ -22,11 +23,12 @@ type RenderSystem() =
     let playerFilter = Filter.Filter3<PlayerComponent, PositionComponent, GraphicComponent>
     let monsterfilter = Filter.Filter3<MonsterComponent, PositionComponent, GraphicComponent>
     for player, pos, glyph in playerFilter do
-      printfn $"{player.Data.playerName}: {glyph.Data.glyph} at {pos.Data.x},{pos.Data.y}"
+      printfn $"{player.Data.playerName}(HP: {player.Owner.Get<HealthComponent>().Data.health}): {glyph.Data.glyph} at {pos.Data.x},{pos.Data.y}"
     for monster, pos, glyph in monsterfilter do
-      printfn $"{monster.Data.monsterName}: {glyph.Data.glyph} at {pos.Data.x},{pos.Data.y}"
+      printfn $"{monster.Data.monsterName}(HP: {monster.Owner.Get<HealthComponent>().Data.health}): {glyph.Data.glyph} at {pos.Data.x},{pos.Data.y}"
     printfn "--------------"
     debugMessages
+    |> List.rev
     |> List.iter (printfn "%s")
     debugMessages <- []
   interface iRunSystem with

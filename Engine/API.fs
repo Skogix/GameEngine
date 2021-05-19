@@ -15,3 +15,4 @@ type Entity with
   member this.Remove<'data>() = Pool<'data>.HardRemove this
   member this.Get<'data>() = Pool<'data>.HardGet this
   member this.Has<'data>() = Pool<'data>.Has this
+  member this.SetName name = this.Name <- name

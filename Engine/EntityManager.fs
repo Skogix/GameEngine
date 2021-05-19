@@ -5,6 +5,10 @@ open Engine.Event
 
 type EntityManager() =
   static let mutable entities = Map.empty
+  static member SetName (name:string) (entity:Entity) =
+    let newEntity = {entity with Name = name}
+    printfn "NEW ENTITY MED NAMN %A" newEntity
+    entities <- entities.Add(entity.Id, newEntity)
   static member CreateEntity() =
     let newEntity =
       match
@@ -12,10 +16,12 @@ type EntityManager() =
         |> Map.toSeq
         |> Seq.tryFind(fun (_,y) -> y.Active = false)
         with
-      | Some (id, entity) -> { Id = id
+      | Some (id, entity) -> { Name = $"{id}"
+                               Id = id
                                Generation = entity.Generation+1
                                Active = true}
-      | None -> { Id = entities.Count
+      | None -> { Name = $"{entities.Count}"
+                  Id = entities.Count
                   Generation = 0
                   Active = true}
     entities <- entities.Add(newEntity.Id, newEntity) 
@@ -24,7 +30,7 @@ type EntityManager() =
   static member DestroyEntity entity =
     let destroyedEntity = {entity with Active = false}
     eEvent<EntityDestroyed>.Post {entityDestroyed=destroyedEntity}
-    entities.Add(destroyedEntity.Id, destroyedEntity) |> ignore
+    entities <- entities.Add(destroyedEntity.Id, destroyedEntity) 
 //type EntityManager() =
 //  let mailbox = MailboxProcessor.Start(fun inbox ->
 //    let rec loop (entities:Map<EntityId, Entity>) = async {

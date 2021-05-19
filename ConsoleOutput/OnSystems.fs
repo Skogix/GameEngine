@@ -91,19 +91,19 @@ type OnCollision() =
 type OnAttack() =
   interface iListenSystem with
     member this.Init() = do eEvent.Listen<AttackCommand>(fun (x:AttackCommand) ->
-      debug $"{x.attacker} attackerar {x.defender}"
+      debug $"{x.attacker} attackerar {x.defender} for {x.attacker.Get<AttackComponent>().Data.attack} damage."
       let attackDamage = x.attacker.Get<AttackComponent>()
       let defenderHealth = x.defender.Get<HealthComponent>()
       let newDefenderHealth = {defenderHealth.Data with health = defenderHealth.Data.health - attackDamage.Data.attack}
       let newComponent = x.defender.Add newDefenderHealth
-      eEvent.Post{ healthComponent=newComponent;entity = x.defender }
+      eEvent.Post{ healthComponent=newComponent; entity = x.defender; damageAmount = attackDamage.Data.attack }
       ()
       )
 /// kolla om entitien som tog damage har <= 0 hp, isf skicka deathEvent
 type OnDamageTaken() =
   interface iListenSystem with
     member this.Init() = do eEvent.Listen<DamageTakenEvent>(fun (x:DamageTakenEvent) ->
-      engineDebug $"Någon tog damage: {x.healthComponent}"      
+      debug $"{x.entity.Name} tog {x.damageAmount} damage och har nu {x.healthComponent.Data.health} hp."      
       if x.healthComponent.Data.health <= 0 then
         eEvent.Post{deadEntity=x.entity}
       )
@@ -112,7 +112,7 @@ type OnDamageTaken() =
 type OnDeath() =
   interface iListenSystem with
     member this.Init() = do eEvent.Listen<DeathEvent>(fun (x:DeathEvent) ->
-      debug $"Någon dog: {x.deadEntity}"
+      debug $"{x.deadEntity} dog!"
       // todo fixa destroyEntity plz
       x.deadEntity.Add{glyph='x'}
       x.deadEntity.Add{isBlocking=false}

@@ -17,6 +17,7 @@ type TagComponent = {tag:string}
 /// kommer losas via json/skogixjson senare
 let createPlayer name glyph hp attack (pos:PositionComponent) (engine:Engine) =
   let player = engine.CreateEntity()
+  player.SetName name
   player.Add{playerName=name}
   player.Add{isBlocking=true}
   player.Add pos
@@ -25,9 +26,10 @@ let createPlayer name glyph hp attack (pos:PositionComponent) (engine:Engine) =
   player.Add{health=hp}
   player.Add{tag="Player"}
   player
-let createMonster glyph hp attack (pos:PositionComponent) (engine:Engine) =
+let createMonster name glyph hp attack (pos:PositionComponent) (engine:Engine) =
   let monster = engine.CreateEntity()
-  monster.Add{monsterName="Monster"}
+  monster.SetName name
+  monster.Add{monsterName=name}
   monster.Add{isBlocking=true}
   monster.Add pos
   monster.Add{glyph=glyph}
