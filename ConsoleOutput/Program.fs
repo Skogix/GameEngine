@@ -1,44 +1,41 @@
 ﻿open System
 open System.Diagnostics
 open System.Threading
-open ConsoleOutput.Components
-open ConsoleOutput.OnSystems
-open ConsoleOutput.RunSystems
+open ConsoleOutput
+open ConsoleOutput.Attack
+open ConsoleOutput.Input
+open ConsoleOutput.Movement
+open ConsoleOutput.Output
 open Engine.API
 open Engine
 open Engine.Debug
+open GameComponents
   
 [<EntryPoint>]
 let main _ =
   let engine = Engine.Engine()
-  let random = System.Random()
-  DebugStatus <- Combo
+  DebugStatus <- Enabled
   Console.CursorVisible <- false
   Console.Clear()
-  
-  // todo fixa lite extensions, det här ser ut som skit
-  createWalls 50 20 engine
-  let player1 = createPlayer "Skogix" '@' 100 10 {x=8;y=8} engine
-//  let monster1 = createMonster "Monster" 'M' 18 12 {x=2;y=2} engine
-  for n in [2..15] do
-    createMonster
-      $"Monster#{n}"
-      'M'
-      (random.Next(10,50))
-      (random.Next(1,5))
-      {x=(random.Next(2,18));y=(random.Next(2,18))}
-      engine |> ignore
+  let player = engine.CreateEntity("Player")
+  player.Add{x=3;y=3}
+  player.Add{glyph='@'}
+  player.Add{health=10}
+  player.Add{playerTag="Skogix"}
+  player.Add(Sword (10, Slashing))
+  let monster = engine.CreateEntity("Monster")
+  monster.Add{x=4;y=4}
+  monster.Add{glyph='M'}
+  monster.Add{health=10}
+  monster.Add{monsterTag="Monster"}
   
   
-  engine.AddRunSystem(RenderSystem())
-  engine.AddRunSystem(InputSystem())
-  engine.AddRunSystem(AiSystem())
-  engine.AddListenSystem(OnTryMove())
-  engine.AddListenSystem(OnCollision())
-  engine.AddListenSystem(OnKeyPressed())
-  engine.AddListenSystem(OnAttack())
-  engine.AddListenSystem(OnDamageTaken())
-  engine.AddListenSystem(OnDeath())
+  engine.AddRunSystem(RunRenderer())
+  engine.AddRunSystem(RunGetInput())
+  engine.AddListenSystem(InputSystem())
+  engine.AddListenSystem(OnMoveCommand())
+  engine.AddListenSystem(OnAttackCommand())
+  
   engine.Init()
   while true do
     engine.Run()

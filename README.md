@@ -1,19 +1,7 @@
 # Skogix GameEngine
-versioning
-```
-f#/c#-game example
-system
-filter
-component, pools
-debug, logging, api
-entity state
-eventStore
-engineEvents
-0.20 - setup/planning
-0.10 - readme, project setup, init
-```
 todo
 ```
+fixa destroyEntity
 skriva egna zipx-funktioner till filters
 blueprints for att ha recursive components i samma entity
 debug hämta alla components från en entity?

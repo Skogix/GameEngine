@@ -15,7 +15,7 @@ type Direction = Up | Down | Left | Right
 
 /// skapar en ny position beroende på direction
 let createNewPosFromDirection (entity:Entity) direction =
-  let oldPos = entity.Get<PositionComponent>().Data
+  let oldPos = entity.Get<Position>().Data
   let newPos = 
     match direction with
     | Up -> {x=oldPos.x;y=oldPos.y-1}
@@ -51,7 +51,7 @@ type OnTryMove() =
     member this.Init() =
       do eEvent.Listen(fun (event:MoveCommand) ->
         match
-          Filter.Filter1<PositionComponent>
+          Filter.Filter1<Position>
           |> List.tryFind(fun x -> x.Data = event.tryMoveToPos) with
         | Some collidedWith ->
           eEvent.Post { collider=event.entity;collidedWith = collidedWith.Owner}
@@ -70,8 +70,8 @@ type CollisionTypes =
 type OnCollision() =
   interface iListenSystem with
     member this.Init() = do eEvent.Listen<CollisionEvent>(fun (x:CollisionEvent) ->
-      let isAttack = (x.collider.Has<AttackComponent>() && x.collidedWith.Has<HealthComponent>())
-      let isBlocking = x.collidedWith.Get<PhysicsComponent>().Data.isBlocking
+      let isAttack = (x.collider.Has<Strength>() && x.collidedWith.Has<Health>())
+      let isBlocking = x.collidedWith.Get<Physics>().Data.isBlocking
       let getCollisionType = 
         match (isAttack, isBlocking) with
         | true, _ -> Attack
@@ -82,8 +82,8 @@ type OnCollision() =
         eEvent.Post<AttackCommand>{ attacker=x.collider;defender=x.collidedWith }
         printfn $"{x.collider.Id} attacks {x.collidedWith.Id}"
       | Move ->
-        x.collider.Add (x.collidedWith.Get<PositionComponent>().Data)
-        eEvent.Post<MovedEvent>{ movedToPos=x.collidedWith.Get<PositionComponent>().Data
+        x.collider.Add (x.collidedWith.Get<Position>().Data)
+        eEvent.Post<MovedEvent>{ movedToPos=x.collidedWith.Get<Position>().Data
                                  entity = x.collider }
       | DoNothing -> ()
       )
@@ -91,14 +91,21 @@ type OnCollision() =
 type OnAttack() =
   interface iListenSystem with
     member this.Init() = do eEvent.Listen<AttackCommand>(fun (x:AttackCommand) ->
-      debug $"{x.attacker} attackerar {x.defender} for {x.attacker.Get<AttackComponent>().Data.attack} damage."
-      let attackDamage = x.attacker.Get<AttackComponent>()
-      let defenderHealth = x.defender.Get<HealthComponent>()
-      let newDefenderHealth = {defenderHealth.Data with health = defenderHealth.Data.health - attackDamage.Data.attack}
-      let newComponent = x.defender.Add newDefenderHealth
-      eEvent.Post{ healthComponent=newComponent; entity = x.defender; damageAmount = attackDamage.Data.attack }
+      
       ()
       )
+//type OnAttack() =
+//  interface iListenSystem with
+//    member this.Init() = do eEvent.Listen<AttackCommand>(fun (x:AttackCommand) ->
+//      let defenderHealth = x.defender.Get<Health>()
+//      
+//      debug $"{x.attacker} attackerar {x.defender} unarmed for {x.attacker.Get<Strength>().Data.strength} damage."
+//      let attackDamage = x.attacker.Get<Strength>()
+//      let newDefenderHealth = {defenderHealth.Data with health = defenderHealth.Data.health - attackDamage.Data.strength}
+//      let newComponent = x.defender.Add newDefenderHealth
+//      eEvent.Post{ healthComponent=newComponent; entity = x.defender; damageAmount = attackDamage.Data.strength }
+//      ()
+//      )
 /// kolla om entitien som tog damage har <= 0 hp, isf skicka deathEvent
 type OnDamageTaken() =
   interface iListenSystem with
@@ -116,9 +123,9 @@ type OnDeath() =
       // todo fixa destroyEntity plz
       x.deadEntity.Add{glyph='x'}
       x.deadEntity.Add{isBlocking=false}
-      x.deadEntity.Remove<HealthComponent>()
-      x.deadEntity.Remove<AttackComponent>()
-      x.deadEntity.Remove<MonsterComponent>()
+      x.deadEntity.Remove<Health>()
+      x.deadEntity.Remove<Strength>()
+      x.deadEntity.Remove<Monster>()
       ()
       
       )

@@ -1,43 +1,51 @@
 module ConsoleOutput.Components
 
-open Engine.Engine
-open Engine.API
 
 /// Components är datan en entity kan ha
-type PositionComponent = {x:int;y:int}
-type GraphicComponent = {glyph:char}
-type PlayerComponent = {playerName:string}
-type MonsterComponent = {monsterName:string}
-type AttackComponent = {attack:int}
-type HealthComponent = {health:int}
-type PhysicsComponent = {isBlocking:bool}
-type TagComponent = {tag:string}
+type Position = {x:int;y:int}
+type Graphic = {glyph:char}
+type Player = {playerName:string}
+type Monster = {monsterName:string}
+type Strength = {strength:int}
+type Health = {health:int}
+type Physics = {isBlocking:bool}
+type Tag = {tag:string}
+
+
+type AttackDamage = {attackDamage:int}
+type AttackType =
+  | Slashing
+  | Piercing
+  | Blunt
+type Weapon =
+  | Sword of AttackDamage * AttackType
+type Combat = Strength * Health * Weapon option
 
 /// Blueprints for att underlätta creation av entities och adda components
 /// kommer losas via json/skogixjson senare
-let createPlayer name glyph hp attack (pos:PositionComponent) (engine:Engine) =
+let createPlayer name glyph hp attack (pos:Position) (engine:Engine) =
   let player = engine.CreateEntity()
   player.SetName name
+  player.Add<Combat>({strength=3}, {health=100}, (Some (Sword({attackDamage=10}, Slashing))))
   player.Add{playerName=name}
   player.Add{isBlocking=true}
   player.Add pos
   player.Add{glyph=glyph}
-  player.Add{attack=attack}
-  player.Add{health=hp}
   player.Add{tag="Player"}
   player
-let createMonster name glyph hp attack (pos:PositionComponent) (engine:Engine) =
+let createMonster name glyph hp strength (pos:Position) (engine:Engine) =
   let monster = engine.CreateEntity()
   monster.SetName name
+  monster.Add<Combat>({strength=strength}, {health=hp}, None)
   monster.Add{monsterName=name}
   monster.Add{isBlocking=true}
   monster.Add pos
   monster.Add{glyph=glyph}
-  monster.Add{attack=attack}
+  monster.Add<Strength>{strength=strength}
   monster.Add{health=hp}
   monster.Add{tag="Monster"}
   monster
-let createWall (pos:PositionComponent) (engine:Engine) =
+let createWall (pos:Position) (engine:Engine) =
   let wall = engine.CreateEntity()
   wall.Add pos
   wall.Add {glyph='#'}

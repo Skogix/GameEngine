@@ -7,6 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="Components.fs" />
+        <Compile Include="Events.fs" />
+        <Compile Include="RunSystems.fs" />
+        <Compile Include="OnSystems.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 

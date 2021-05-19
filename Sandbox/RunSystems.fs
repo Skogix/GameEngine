@@ -14,18 +14,18 @@ open Events
 /// todo render ordering, just nu så finns det ingen priolista
 type RenderSystem() =
   let renderGame() =
-    let filter = Filter.Filter2<PositionComponent, GraphicComponent>
+    let filter = Filter.Filter2<Position, Graphic>
     for pos, render in filter do
       Console.SetCursorPosition(pos.Data.x+90, pos.Data.y)
       printf $"{render.Data.glyph}"
 //    Console.SetCursorPosition(1, 22)
   let renderDebug() =
-    let playerFilter = Filter.Filter3<PlayerComponent, PositionComponent, GraphicComponent>
-    let monsterfilter = Filter.Filter3<MonsterComponent, PositionComponent, GraphicComponent>
+    let playerFilter = Filter.Filter3<Player, Position, Graphic>
+    let monsterfilter = Filter.Filter3<Monster, Position, Graphic>
     for player, pos, glyph in playerFilter do
-      printfn $"{player.Data.playerName}(HP: {player.Owner.Get<HealthComponent>().Data.health}): {glyph.Data.glyph} at {pos.Data.x},{pos.Data.y}"
+      printfn $"{player.Data.playerName}(HP: {player.Owner.Get<Health>().Data.health}): {glyph.Data.glyph} at {pos.Data.x},{pos.Data.y}"
     for monster, pos, glyph in monsterfilter do
-      printfn $"{monster.Data.monsterName}(HP: {monster.Owner.Get<HealthComponent>().Data.health}): {glyph.Data.glyph} at {pos.Data.x},{pos.Data.y}"
+      printfn $"{monster.Data.monsterName}(HP: {monster.Owner.Get<Health>().Data.health}): {glyph.Data.glyph} at {pos.Data.x},{pos.Data.y}"
     printfn "--------------"
     debugMessages
     |> List.rev
@@ -51,7 +51,7 @@ type InputSystem() =
   interface iRunSystem with
     member this.Init() = ()
     member this.Run() =
-      for player, pos, glyph in Filter.Filter3<PlayerComponent, PositionComponent, GraphicComponent> do
+      for player, pos, glyph in Filter.Filter3<Player, Position, Graphic> do
         let key = Console.ReadKey(true).Key
         eEvent.Post{keyPressed=key;entity=player.Owner}
 type AiSystem() =
@@ -59,7 +59,7 @@ type AiSystem() =
     member this.Init() = ()
     member this.Run() =
       let random = Random()
-      for monster, pos, glyph in Filter.Filter3<MonsterComponent, PositionComponent, GraphicComponent> do
+      for monster, pos, glyph in Filter.Filter3<Monster, Position, Graphic> do
         let rand = random.Next(1,5)
         match rand with
         | 1 -> eEvent.Post<MoveCommand>{keyPressed=ConsoleKey.UpArrow;entity=monster.Owner}
