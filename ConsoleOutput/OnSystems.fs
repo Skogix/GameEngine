@@ -72,7 +72,7 @@ type OnCollision() =
       let getCollisionType = 
         match (isAttack, isBlocking) with
         | true, _ -> Attack
-        | false, true -> Move
+        | false, false -> Move
         | _, _ -> DoNothing
       match getCollisionType with
       | Attack -> 
@@ -103,12 +103,14 @@ type OnDamageTaken() =
         eEvent.Post{deadEntity=x.entity}
       )
 /// hantera on death t.ex ge xp, droppa loot, ta bort entity
+/// just nu bara ändra glyph, remove health
 type OnDeath() =
   interface iListenSystem with
     member this.Init() = do eEvent.Listen<DeathEvent>(fun (x:DeathEvent) ->
       printfn "Någon dog: %A" x.deadEntity
       // todo fixa destroyEntity plz
       x.deadEntity.Add{glyph='x'}
+      x.deadEntity.Add{isBlocking=false}
       x.deadEntity.Remove<HealthComponent>()
       ()
       )

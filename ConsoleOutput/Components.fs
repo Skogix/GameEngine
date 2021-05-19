@@ -30,14 +30,15 @@ let createMonster glyph hp attack (pos:PositionComponent) (engine:Engine) =
   monster.Add pos
   monster.Add{attack=attack}
   monster.Add{health=hp}
-  monster.Add{tag="Monster"}
   monster.Add{isBlocking=true}
+  monster.Add{tag="Monster"}
   monster
 let createWall (pos:PositionComponent) (engine:Engine) =
   let wall = engine.CreateEntity()
   wall.Add pos
   wall.Add {glyph='#'}
   wall.Add {isBlocking=true}
+  wall.Add {tag="Wall"}
   ()
 let createWalls width height (engine:Engine) =
   for x in [1..width] do
