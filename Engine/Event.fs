@@ -1,6 +1,5 @@
 module Engine.Event
 open System.Collections.Generic
-open System.Diagnostics
 open Engine
 
 type EventListeners<'event>() =
@@ -12,7 +11,7 @@ type EventListeners<'event>() =
   static member Listen (handler:'event -> unit) =
     Listeners.Add handler
 type EngineEvent<'event> =
-  static member Post(event:'event) =
+  static member Post<'event>(event:'event) =
     EventListeners<'event>.Post event
   static member Listen<'event> handler =
     EventListeners<'event>.Listen handler
