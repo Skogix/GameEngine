@@ -9,6 +9,7 @@ open ConsoleOutput.Output
 open Engine.API
 open Engine
 open Engine.Debug
+open Engine.Domain
 open GameComponents
   
 [<EntryPoint>]
@@ -22,7 +23,12 @@ let main _ =
   player.Add{glyph='@'}
   player.Add{health=10}
   player.Add{playerTag="Skogix"}
-  player.Add(Sword (10, Slashing))
+  player.Add(
+    Sword (
+      10,
+      Slashing,
+      Some (fun (x:Entity) -> x.Get<Health>().Update{health=1};()
+            )))
   let monster = engine.CreateEntity("Monster")
   monster.Add{x=4;y=4}
   monster.Add{glyph='M'}

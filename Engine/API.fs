@@ -10,6 +10,7 @@ type Entity with
   member this.Add<'data>(data:'data) = Pool<'data>.Add this data
   member this.Remove<'data>() = Pool<'data>.HardRemove this
   member this.Get<'data>() = Pool<'data>.HardGet this
+  member this.TryGet<'data>() = Pool<'data>.TryGet this
   member this.Has<'data>() = Pool<'data>.Has this
   member this.SetName name = this.Name <- name
 type Engine with

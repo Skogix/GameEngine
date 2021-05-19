@@ -22,4 +22,5 @@ type Pool<'c>() =
     eEvent.Post{componentRemoved=componentToBeRemoved}
     pool <- pool.Remove entity
   static member HardGet entity = pool.[entity]
+  static member TryGet entity = pool.TryFind entity
   static member Has = pool.ContainsKey

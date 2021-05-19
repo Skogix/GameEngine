@@ -22,7 +22,7 @@ type RunRenderer() =
     for player, pos, glyph in playerFilter do
       printfn $"{player.Data.playerTag}: {glyph.Data.glyph} at {pos.Data.x},{pos.Data.y}"
     for monster, pos, glyph in monsterFilter do
-      printfn $"{monster.Data.monsterTag}: {glyph.Data.glyph} at {pos.Data.x},{pos.Data.y}"
+      printfn $"{monster.Data.monsterTag}(HP:{monster.Owner.Get<Health>().Data.health}): {glyph.Data.glyph} at {pos.Data.x},{pos.Data.y}"
     debug "------------------------"
     debugMessages
     |> List.iter (printfn "%s")
