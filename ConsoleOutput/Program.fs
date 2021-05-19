@@ -15,9 +15,10 @@ let main _ =
   
   // todo fixa lite extensions, det här ser ut som skit
   createWalls 50 20 engine
-  let player2 = createPlayer "Skogix" '@' 100 10 {x=4;y=5} engine
-  let monster1 = createMonster 'A' 14 8 {x=8;y=9} engine
-  let monster2 = createMonster 'B' 18 12 {x=2;y=4} engine
+  let player1 = createPlayer "Skogix" '@' 100 10 {x=8;y=8} engine
+//  let player2 = createPlayer "Skogix" 'B' 100 10 {x=8;y=8} engine
+  for pos in [3..5] do
+    createMonster 'M' 18 12 {x=pos;y=pos} engine
   
   
   engine.AddRunSystem(RenderSystem())

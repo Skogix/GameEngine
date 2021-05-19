@@ -27,12 +27,12 @@ let createPlayer name glyph hp attack (pos:PositionComponent) (engine:Engine) =
   player
 let createMonster glyph hp attack (pos:PositionComponent) (engine:Engine) =
   let monster = engine.CreateEntity()
-  monster.Add{glyph=glyph}
-  monster.Add<MonsterComponent>{monsterName="Monster"}
+  monster.Add{monsterName="Monster"}
+  monster.Add{isBlocking=true}
   monster.Add pos
+  monster.Add{glyph=glyph}
   monster.Add{attack=attack}
   monster.Add{health=hp}
-  monster.Add{isBlocking=true}
   monster.Add{tag="Monster"}
   monster
 let createWall (pos:PositionComponent) (engine:Engine) =

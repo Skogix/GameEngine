@@ -16,10 +16,15 @@ type RenderSystem() =
     member this.Run() =
       let filter = Filter.Filter2<PositionComponent, GraphicComponent>
       match Debug.DebugStatus with
-      | DebugOption.Disabled ->
-        for pos, render in filter do
-        printfn $"Render: {render.Data.glyph} at {pos.Data.x},{pos.Data.y}"
       | DebugOption.Enabled ->
+        let playerFilter = Filter.Filter3<PlayerComponent, PositionComponent, GraphicComponent>
+        let monsterfilter = Filter.Filter3<MonsterComponent, PositionComponent, GraphicComponent>
+        for player, pos, glyph in playerFilter do
+          printfn $"{player.Data.playerName}: {glyph.Data.glyph} at {pos.Data.x},{pos.Data.y}"
+        for monster, pos, glyph in monsterfilter do
+          printfn $"{monster.Data.monsterName}: {glyph.Data.glyph} at {pos.Data.x},{pos.Data.y}"
+        printfn "-------------------------------------"
+      | DebugOption.Disabled ->
         Console.Clear()
         printfn "-------------------------------------"
         for pos, render in filter do
@@ -42,7 +47,7 @@ type AiSystem() =
       let rand = System.Random().Next(1,4)
       for monster, pos, glyph in Filter.Filter3<MonsterComponent, PositionComponent, GraphicComponent> do
         match rand with
-        | 1 -> eEvent.Post{keyPressed=ConsoleKey.UpArrow;entity=monster.Owner}
+        | 1 -> eEvent.Post<MoveCommand>{keyPressed=ConsoleKey.UpArrow;entity=monster.Owner}
         | 2 -> eEvent.Post{keyPressed=ConsoleKey.DownArrow;entity=monster.Owner}
         | 3 -> eEvent.Post{keyPressed=ConsoleKey.LeftArrow;entity=monster.Owner}
         | 4 -> eEvent.Post{keyPressed=ConsoleKey.RightArrow;entity=monster.Owner}

@@ -30,16 +30,18 @@ type OnKeyPressed() =
   interface iListenSystem with
     member this.Init() =
       do eEvent.Listen(fun (x:KeyPressedEvent) ->
-        let oldPos = x.entity.Get<PositionComponent>()
         let newPos =
           match x.keyPressed with
-          | ConsoleKey.UpArrow -> createNewPosFromDirection x.entity Up
-          | ConsoleKey.DownArrow -> createNewPosFromDirection x.entity Down
-          | ConsoleKey.LeftArrow -> createNewPosFromDirection x.entity Left
-          | ConsoleKey.RightArrow -> createNewPosFromDirection x.entity Right
-          | _ -> oldPos.Data
-        eEvent.Post{ tryMoveToPos=newPos
-                     entity = x.entity }
+          | ConsoleKey.UpArrow -> Some (createNewPosFromDirection x.entity Up)
+          | ConsoleKey.DownArrow -> Some (createNewPosFromDirection x.entity Down)
+          | ConsoleKey.LeftArrow -> Some (createNewPosFromDirection x.entity Left)
+          | ConsoleKey.RightArrow -> Some (createNewPosFromDirection x.entity Right)
+          | _ -> None
+        match newPos with
+        | Some pos ->
+          eEvent.Post{ tryMoveToPos=pos
+                       entity = x.entity }
+        | None -> ()
         )
 /// om ny pos är "tom", skicka move-event
 /// om ny pos är något, skicka collide-event

@@ -12,6 +12,7 @@ type EventListeners<'event>() =
     Listeners.Add handler
 type eEvent<'event> =
   static member Post<'event>(event:'event) =
+    printfn "Event: %A" (event.GetType().Name)
     EventListeners<'event>.Post event
   static member Listen<'event> handler =
     EventListeners<'event>.Listen handler
