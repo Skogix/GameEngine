@@ -112,5 +112,6 @@ type OnDeath() =
       x.deadEntity.Add{glyph='x'}
       x.deadEntity.Add{isBlocking=false}
       x.deadEntity.Remove<HealthComponent>()
+      x.deadEntity.Remove<MonsterComponent>()
       ()
       )

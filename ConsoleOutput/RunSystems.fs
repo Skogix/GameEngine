@@ -35,3 +35,18 @@ type InputSystem() =
       for player, pos, glyph in Filter.Filter3<PlayerComponent, PositionComponent, GraphicComponent> do
         let key = Console.ReadKey(true).Key
         eEvent.Post{keyPressed=key;entity=player.Owner}
+type AiSystem() =
+  interface iRunSystem with
+    member this.Init() = ()
+    member this.Run() =
+      let rand = System.Random().Next(1,4)
+      for monster, pos, glyph in Filter.Filter3<MonsterComponent, PositionComponent, GraphicComponent> do
+        match rand with
+        | 1 -> eEvent.Post{keyPressed=ConsoleKey.UpArrow;entity=monster.Owner}
+        | 2 -> eEvent.Post{keyPressed=ConsoleKey.DownArrow;entity=monster.Owner}
+        | 3 -> eEvent.Post{keyPressed=ConsoleKey.LeftArrow;entity=monster.Owner}
+        | 4 -> eEvent.Post{keyPressed=ConsoleKey.RightArrow;entity=monster.Owner}
+        | _ -> eEvent.Post{keyPressed=ConsoleKey.Spacebar;entity=monster.Owner}
+        
+      
+      ()

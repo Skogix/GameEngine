@@ -14,7 +14,7 @@ let main _ =
   Console.CursorVisible <- false
   
   // todo fixa lite extensions, det här ser ut som skit
-  createWalls 20 20 engine
+  createWalls 50 20 engine
   let player2 = createPlayer "Skogix" '@' 100 10 {x=4;y=5} engine
   let monster1 = createMonster 'A' 14 8 {x=8;y=9} engine
   let monster2 = createMonster 'B' 18 12 {x=2;y=4} engine
@@ -22,6 +22,7 @@ let main _ =
   
   engine.AddRunSystem(RenderSystem())
   engine.AddRunSystem(InputSystem())
+  engine.AddRunSystem(AiSystem())
   engine.AddListenSystem(OnTryMove())
   engine.AddListenSystem(OnCollision())
   engine.AddListenSystem(OnKeyPressed())
