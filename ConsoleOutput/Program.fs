@@ -1,5 +1,6 @@
 ﻿open System
 open System.Diagnostics
+open System.Threading
 open ConsoleOutput.Components
 open ConsoleOutput.OnSystems
 open ConsoleOutput.RunSystems
@@ -10,15 +11,16 @@ open Engine.Debug
 [<EntryPoint>]
 let main _ =
   let engine = Engine.Engine()
-  Debug.DebugStatus <- Enabled
+  DebugStatus <- Combo
   Console.CursorVisible <- false
+  Console.Clear()
   
   // todo fixa lite extensions, det här ser ut som skit
   createWalls 50 20 engine
   let player1 = createPlayer "Skogix" '@' 100 10 {x=8;y=8} engine
-//  let player2 = createPlayer "Skogix" 'B' 100 10 {x=8;y=8} engine
-  for pos in [3..5] do
-    createMonster 'M' 18 12 {x=pos;y=pos} engine
+  let monster1 = createMonster 'M' 18 12 {x=2;y=2} engine
+//  for pos in [2..15] do
+//    createMonster 'M' 18 12 {x=pos;y=pos} engine
   
   
   engine.AddRunSystem(RenderSystem())
@@ -33,4 +35,5 @@ let main _ =
   engine.Init()
   while true do
     engine.Run()
+//    Thread.Sleep 500
   0

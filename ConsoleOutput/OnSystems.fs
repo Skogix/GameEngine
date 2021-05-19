@@ -8,6 +8,7 @@ open Engine.Domain
 open Engine.Event
 open Engine.System
 open Engine.API
+open Engine.Debug
 
 /// helpers
 type Direction = Up | Down | Left | Right
@@ -77,7 +78,7 @@ type OnCollision() =
         | false, false -> Move
         | _, _ -> DoNothing
       match getCollisionType with
-      | Attack -> 
+      | Attack ->
         eEvent.Post<AttackCommand>{ attacker=x.collider;defender=x.collidedWith }
         printfn $"{x.collider.Id} attacks {x.collidedWith.Id}"
       | Move ->
@@ -90,6 +91,7 @@ type OnCollision() =
 type OnAttack() =
   interface iListenSystem with
     member this.Init() = do eEvent.Listen<AttackCommand>(fun (x:AttackCommand) ->
+      debug $"{x.attacker} attackerar {x.defender}"
       let attackDamage = x.attacker.Get<AttackComponent>()
       let defenderHealth = x.defender.Get<HealthComponent>()
       let newDefenderHealth = {defenderHealth.Data with health = defenderHealth.Data.health - attackDamage.Data.attack}
@@ -101,6 +103,7 @@ type OnAttack() =
 type OnDamageTaken() =
   interface iListenSystem with
     member this.Init() = do eEvent.Listen<DamageTakenEvent>(fun (x:DamageTakenEvent) ->
+      engineDebug $"Någon tog damage: {x.healthComponent}"      
       if x.healthComponent.Data.health <= 0 then
         eEvent.Post{deadEntity=x.entity}
       )
@@ -109,11 +112,12 @@ type OnDamageTaken() =
 type OnDeath() =
   interface iListenSystem with
     member this.Init() = do eEvent.Listen<DeathEvent>(fun (x:DeathEvent) ->
-      printfn "Någon dog: %A" x.deadEntity
+      debug $"Någon dog: {x.deadEntity}"
       // todo fixa destroyEntity plz
       x.deadEntity.Add{glyph='x'}
       x.deadEntity.Add{isBlocking=false}
       x.deadEntity.Remove<HealthComponent>()
+      x.deadEntity.Remove<AttackComponent>()
       x.deadEntity.Remove<MonsterComponent>()
       ()
       

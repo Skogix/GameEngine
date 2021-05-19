@@ -3,6 +3,7 @@ module Engine.Domain
 open System
 type EntityId = int
 type EntityGeneration = int
+[<StructuredFormatDisplay("[{Id}]")>]
 type Entity = {
   Id: EntityId
   Generation: EntityGeneration

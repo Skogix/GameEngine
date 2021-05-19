@@ -4,7 +4,7 @@ open Engine
 
 type EventListeners<'event>() =
   static let Listeners = List<'event -> unit>()
-  static do Listeners.Add Debug.debug
+  static do Listeners.Add Debug.engineDebug
   static member Post<'event> (event:'event) =
     for listener in Listeners do
       listener event
@@ -12,7 +12,6 @@ type EventListeners<'event>() =
     Listeners.Add handler
 type eEvent<'event> =
   static member Post<'event>(event:'event) =
-    printfn "Event: %A" (event.GetType().Name)
     EventListeners<'event>.Post event
   static member Listen<'event> handler =
     EventListeners<'event>.Listen handler
