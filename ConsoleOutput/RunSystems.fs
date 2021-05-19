@@ -27,4 +27,4 @@ type InputSystem() =
     member this.Run() =
       for player, pos, glyph in Filter.Filter3<PlayerComponent, PositionComponent, GraphicComponent> do
         let key = Console.ReadKey(true).Key
-        EngineEvent.Post{keyPressed=key;entity=player.Owner}
+        eEvent.Post{keyPressed=key;entity=player.Owner}

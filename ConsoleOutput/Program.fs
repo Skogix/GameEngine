@@ -1,39 +1,29 @@
 ﻿open System
 open ConsoleOutput.Components
-open ConsoleOutput.OnAttack
-open ConsoleOutput.OnCollision
-open ConsoleOutput.OnInput
+open ConsoleOutput.OnSystems
 open ConsoleOutput.RunSystems
 open Engine
-open API
-type Direction = Up | Down | Left | Right
-
   
 [<EntryPoint>]
 let main _ =
   let engine = Engine.Engine()
-  Debug.debugEnabled <- true
+  Debug.debugEnabled <- false
   Console.CursorVisible <- false
   
-  let player = engine.CreateEntity()
-  player.Add{name="Skogix"}
-  player.Add{x=3;y=4}
-  player.Add{glyph='@'}
-  player.Add{health=10}
-  player.Add{attack=2}
-  let monster = engine.CreateEntity()
-  monster.Add{x=6;y=7}
-  monster.Add{glyph='M'}
-  monster.Add{health=4}
-  monster.Add{attack=1}
+  // todo fixa lite extensions, det här ser ut som skit
+  createWalls 20 20 engine
+  let player2 = createPlayer "Skogix" '@' 100 10 {x=4;y=5} engine
+  let monster1 = createMonster 'A' 14 8 {x=8;y=9} engine
+  let monster2 = createMonster 'B' 18 12 {x=2;y=4} engine
   
   engine.AddRunSystem(RenderSystem())
   engine.AddRunSystem(InputSystem())
-  engine.AddListenSystem(CheckCollisionSystem())
+  engine.AddListenSystem(OnTryMove())
   engine.AddListenSystem(OnCollision())
   engine.AddListenSystem(OnKeyPressed())
   engine.AddListenSystem(OnAttack())
   engine.AddListenSystem(OnDamageTaken())
+  engine.AddListenSystem(OnDeath())
   engine.Init()
   while true do
     engine.Run()

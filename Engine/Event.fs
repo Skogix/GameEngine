@@ -10,7 +10,7 @@ type EventListeners<'event>() =
       listener event
   static member Listen (handler:'event -> unit) =
     Listeners.Add handler
-type EngineEvent<'event> =
+type eEvent<'event> =
   static member Post<'event>(event:'event) =
     EventListeners<'event>.Post event
   static member Listen<'event> handler =

@@ -15,11 +15,11 @@ type Pool<'c>() =
   static member Add<'c> entity (data:'c) =
     let c = createComponent entity data
     pool <- pool.Add(entity, c)
-    EngineEvent.Post{componentUpdated=c}
+    eEvent.Post{componentUpdated=c}
     c
   static member HardRemove<'c> entity =
     let componentToBeRemoved = pool.[entity]
-    EngineEvent.Post{componentRemoved=componentToBeRemoved}
+    eEvent.Post{componentRemoved=componentToBeRemoved}
     pool <- pool.Remove entity
   static member HardGet entity = pool.[entity]
   static member Has = pool.ContainsKey

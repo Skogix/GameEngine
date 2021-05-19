@@ -19,11 +19,11 @@ type EntityManager() =
                   Generation = 0
                   Active = true}
     entities <- entities.Add(newEntity.Id, newEntity) 
-    EngineEvent<EntityCreated>.Post {entityCreated=newEntity}
+    eEvent<EntityCreated>.Post {entityCreated=newEntity}
     newEntity
   static member DestroyEntity entity =
     let destroyedEntity = {entity with Active = false}
-    EngineEvent<EntityDestroyed>.Post {entityDestroyed=destroyedEntity}
+    eEvent<EntityDestroyed>.Post {entityDestroyed=destroyedEntity}
     entities.Add(destroyedEntity.Id, destroyedEntity) |> ignore
 //type EntityManager() =
 //  let mailbox = MailboxProcessor.Start(fun inbox ->
