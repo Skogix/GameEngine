@@ -114,4 +114,5 @@ type OnDeath() =
       x.deadEntity.Remove<HealthComponent>()
       x.deadEntity.Remove<MonsterComponent>()
       ()
+      
       )
