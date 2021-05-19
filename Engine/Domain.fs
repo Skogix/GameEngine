@@ -16,3 +16,4 @@ type Component<'c> = {
 type EntityCreated = {entityCreated:Entity}
 type EntityDestroyed = {entityDestroyed:Entity}
 type ComponentUpdated<'t> = {componentUpdated:Component<'t>}
+type ComponentRemoved<'t> = {componentRemoved:Component<'t>}
