@@ -9,10 +9,10 @@ open Engine.Event
 open Engine.System
 open Engine.API
 
-/// ska keypressed gå som ett runsystem for det kors varje tick och är en av de
-/// få onevents som alltid skickar try-commands-ish?
-/// matcha keyarrows och skicka trymove-event
+/// helpers
 type Direction = Up | Down | Left | Right
+
+/// skapar en ny position beroende på direction
 let createNewPosFromDirection (entity:Entity) direction =
   let oldPos = entity.Get<PositionComponent>().Data
   let newPos = 
@@ -21,9 +21,11 @@ let createNewPosFromDirection (entity:Entity) direction =
     | Down -> {x=oldPos.x;y=oldPos.y+1}
     | Left -> {x=oldPos.x-1;y=oldPos.y}
     | Right -> {x=oldPos.x+1;y=oldPos.y}
-    | _ -> oldPos
   newPos
   
+/// - ska keypressed gå som ett runsystem for det kors varje tick och är en av de
+/// - få onevents som alltid skickar try-commands-ish?
+/// matcha keyarrows och skicka moveCommand
 type OnKeyPressed() =
   interface iListenSystem with
     member this.Init() =
@@ -44,7 +46,7 @@ type OnKeyPressed() =
 type OnTryMove() =
   interface iListenSystem with
     member this.Init() =
-      do eEvent.Listen(fun (event:TryMoveCommand) ->
+      do eEvent.Listen(fun (event:MoveCommand) ->
         match
           Filter.Filter1<PositionComponent>
           |> List.tryFind(fun x -> x.Data = event.tryMoveToPos) with
@@ -61,7 +63,7 @@ type OnTryMove() =
 type CollisionTypes =
   | Attack
   | Move
-  | Nothing
+  | DoNothing
 type OnCollision() =
   interface iListenSystem with
     member this.Init() = do eEvent.Listen<CollisionEvent>(fun (x:CollisionEvent) ->
@@ -71,7 +73,7 @@ type OnCollision() =
         match (isAttack, isBlocking) with
         | true, _ -> Attack
         | false, true -> Move
-        | _, _ -> Nothing
+        | _, _ -> DoNothing
       match getCollisionType with
       | Attack -> 
         eEvent.Post<AttackCommand>{ attacker=x.collider;defender=x.collidedWith }
@@ -80,8 +82,9 @@ type OnCollision() =
         x.collider.Add (x.collidedWith.Get<PositionComponent>().Data)
         eEvent.Post<MovedEvent>{ movedToPos=x.collidedWith.Get<PositionComponent>().Data
                                  entity = x.collider }
+      | DoNothing -> ()
       )
-/// damageTakenEvent -> defenderHealth - attackerDamage
+/// skicka damageTakenEvent (hp - attackdamage)
 type OnAttack() =
   interface iListenSystem with
     member this.Init() = do eEvent.Listen<AttackCommand>(fun (x:AttackCommand) ->

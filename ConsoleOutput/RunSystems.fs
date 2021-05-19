@@ -7,6 +7,7 @@ open Engine.Event
 open Engine.System
 open Events
 
+/// Går igenom alla entities som har en position och en graphic och printar till console
 type RenderSystem() =
   interface iRunSystem with
     member this.Init() = ()
@@ -21,6 +22,7 @@ type RenderSystem() =
         for pos, render in filter do
         Console.SetCursorPosition(pos.Data.x, pos.Data.y)
         printf $"{render.Data.glyph}"
+/// Hämtar input från user for varje entity med player, position och graphic
 type InputSystem() =
   interface iRunSystem with
     member this.Init() = ()

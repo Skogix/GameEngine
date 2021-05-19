@@ -3,14 +3,17 @@ module ConsoleOutput.Components
 open Engine.Engine
 open Engine.API
 
+/// Components är datan en entity kan ha
 type PositionComponent = {x:int;y:int}
 type GraphicComponent = {glyph:char}
 type PlayerComponent = {name:string}
 type AttackComponent = {attack:int}
 type HealthComponent = {health:int}
 type PhysicsComponent = {isBlocking:bool}
-  
 type TagComponent = {tag:string}
+
+/// Blueprints for att underlätta creation av entities och adda components
+/// kommer losas via json/skogixjson senare
 let createPlayer name glyph hp attack (pos:PositionComponent) (engine:Engine) =
   let player = engine.CreateEntity()
   player.Add{name=name}
