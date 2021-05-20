@@ -3,9 +3,8 @@ module Engine.Domain
 open System
 type EntityId = int
 type EntityGeneration = int
-[<StructuredFormatDisplay("{Name}")>]
+[<StructuredFormatDisplay("{Id}")>]
 type Entity = {
-  mutable Name: string
   Id: EntityId
   Generation: EntityGeneration
   Active: bool
@@ -15,6 +14,7 @@ type Component<'c> = {
   Owner: Entity
   Data: 'c
 }
+type Tag = string
 type EntityCreated = {entityCreated:Entity}
 type EntityDestroyed = {entityDestroyed:Entity}
 type ComponentUpdated<'t> = {componentUpdated:Component<'t>}

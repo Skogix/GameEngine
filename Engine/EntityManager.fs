@@ -5,10 +5,6 @@ open Engine.Event
 
 type EntityManager() =
   static let mutable entities = Map.empty
-  static member SetName (name:string) (entity:Entity) =
-    let newEntity = {entity with Name = name}
-    printfn "NEW ENTITY MED NAMN %A" newEntity
-    entities <- entities.Add(entity.Id, newEntity)
   static member CreateEntity() =
     let newEntity =
       match
@@ -16,12 +12,10 @@ type EntityManager() =
         |> Map.toSeq
         |> Seq.tryFind(fun (_,y) -> y.Active = false)
         with
-      | Some (id, entity) -> { Name = $"{id}"
-                               Id = id
+      | Some (id, entity) -> { Id = id
                                Generation = entity.Generation+1
                                Active = true}
-      | None -> { Name = $"{entities.Count}"
-                  Id = entities.Count
+      | None -> { Id = entities.Count
                   Generation = 0
                   Active = true}
     entities <- entities.Add(newEntity.Id, newEntity) 

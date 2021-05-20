@@ -1,6 +1,13 @@
 module Engine.Filter
+open System
 open Component
 open Engine.Domain
+
+type iBluePrint =
+  interface
+    abstract Types: Type list
+    end
+
 let FilterEntity1<'a> = Pool<'a>.AllEntities
 let FilterEntity2<'a,'b> =
   Pool<'a>.AllEntities
@@ -26,3 +33,4 @@ let Filter3<'a,'b,'c> =
   let b = (es |> GetComponentsFromEntityList<'b>)
   let c = (es |> GetComponentsFromEntityList<'c>)
   c |> List.zip3 a b
+let GetBlueprint<'b when 'b :> iBluePrint> = 0 

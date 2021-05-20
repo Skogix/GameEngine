@@ -12,11 +12,18 @@ type Pool<'c>() =
   static member AllEntities = [for x in pool do x.Key]
   static member AllComponents = [for x in pool do x.Value]
   static member ContainsEntity = pool.ContainsKey
-  static member Add<'c> entity (data:'c) =
+  static member AddAndGetComponent<'c> entity (data:'c) =
     let c = createComponent entity data
     pool <- pool.Add(entity, c)
     eEvent.Post{componentUpdated=c}
     c
+  static member Add<'c> entity (data:'c) =
+    let c = createComponent entity data
+    pool <- pool.Add(entity, c)
+    eEvent.Post{componentUpdated=c}
+  static member AddTag tag entity =
+    let c = createComponent entity tag
+    pool <- pool.Add(entity, c)
   static member HardRemove<'c> entity =
     let componentToBeRemoved = pool.[entity]
     eEvent.Post{componentRemoved=componentToBeRemoved}

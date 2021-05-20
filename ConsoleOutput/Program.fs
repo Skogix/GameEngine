@@ -1,48 +1,32 @@
 ﻿open System
-open System.Diagnostics
-open System.Threading
-open ConsoleOutput
-open ConsoleOutput.Attack
-open ConsoleOutput.Input
-open ConsoleOutput.Movement
-open ConsoleOutput.Output
-open Engine.API
 open Engine
-open Engine.Debug
+open Engine.API
 open Engine.Domain
-open GameComponents
+open Game1
+let engine = Engine.Engine.Engine()
+type Name = {name:string}
+type Position = {x:int;y:int}
+
+
+type WeaponType =
+  | Sword
+type Item =
+  | Weapon of WeaponType
+type Inventory = {items:Item list}
+type Character =
+  interface Engine.Filter.iBluePrint with
+    member this.Types = [typedefof<Name>;typedefof<Position>]
   
+let createPlayer =
+  (engine.CreateEntity, [])
+  |> engine.AddBlueprint{name="Skogix"}
 [<EntryPoint>]
 let main _ =
-  let engine = Engine.Engine()
-  DebugStatus <- Enabled
-  Console.CursorVisible <- false
-  Console.Clear()
-  let player = engine.CreateEntity("Player")
-  player.Add{x=3;y=3}
-  player.Add{glyph='@'}
-  player.Add{health=10}
-  player.Add{playerTag="Skogix"}
-  player.Add(
-    Sword (
-      10,
-      Slashing,
-      Some (fun (x:Entity) -> x.Get<Health>().Update{health=1};()
-            )))
-  let monster = engine.CreateEntity("Monster")
-  monster.Add{x=4;y=4}
-  monster.Add{glyph='M'}
-  monster.Add{health=10}
-  monster.Add{monsterTag="Monster"}
+  Debug.DebugStatus <- Debug.Enabled
+  let player = createPlayer
+  printfn "Player: %A" player
+  for msg in Debug.debugMessages do
+    printfn "%A" msg
   
   
-  engine.AddRunSystem(RunRenderer())
-  engine.AddRunSystem(RunGetInput())
-  engine.AddListenSystem(InputSystem())
-  engine.AddListenSystem(OnMoveCommand())
-  engine.AddListenSystem(OnAttackCommand())
-  
-  engine.Init()
-  while true do
-    engine.Run()
   0

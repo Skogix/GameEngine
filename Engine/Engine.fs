@@ -1,6 +1,8 @@
 module Engine.Engine
 open System
 open System.Collections.Generic
+open Engine.Component
+open Engine.Domain
 open Engine.System
 type Engine() =
   let iRunSystems = List<iRunSystem>()
@@ -15,3 +17,7 @@ type Engine() =
   member this.Run() =
     for system in iRunSystems do
       system.Run()
+  member this.AddBlueprint<'t>(data:'t)(entity:Entity, types: Type list) =
+    let c = Pool<'t>.AddAndGetComponent
+    let t = typedefof<'t>
+    (entity, (t :: types))

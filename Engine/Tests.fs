@@ -11,13 +11,11 @@ module TestBehaviour =
     |> Option.defaultValue 0
   let createEntity events =
     {
-    Name = "Test"
     Id = 0
     Generation = 0
     Active = true }
 module TestData =
   let entity = {
-    Name = "Test"
     Id = 0
     Generation = 0
     Active = true }
