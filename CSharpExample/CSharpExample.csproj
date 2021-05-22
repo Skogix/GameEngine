@@ -10,4 +10,8 @@
       <ProjectReference Include="..\Engine\Engine.fsproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Enums" />
+    </ItemGroup>
+
 </Project>
