@@ -1,18 +1,21 @@
 module Engine.Entity
+open System.Runtime.InteropServices
 open Domain
 open Engine.Event
 
-type EntityManager(world:World) =
+type EntityManager() =
   let mailbox = MailboxProcessor.Start(fun inbox ->
     let rec loop (state:Map<EntityId, Entity>) = async {
       let! message = inbox.Receive()
       match message with
-      | Event.CreateEntity rc ->
+      | CreateEntity ->
         let newEntity = {Id=state.Count}
-        rc.Reply newEntity
         return! loop (state.Add(newEntity.Id, newEntity))
       return! loop state
     }
     loop Map.empty
     )
-  member this.Mailbox = mailbox
+  do EventListeners.Listen (fun (x:EntityCommand) ->
+    match x with
+    | CreateEntity -> mailbox.Post CreateEntity
+    )

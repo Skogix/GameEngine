@@ -7,12 +7,14 @@ open Engine.Domain
 type EventId = int
 type iEvent = interface end
 type iCommand = interface end
-type EngineEvents =
+type EntityEvent =
   | EntityCreated of Entity
   interface iEvent
-type EngineCommands =
-  | CreateEntity of AsyncReplyChannel<Entity>
+type EntityCommand =
+  | CreateEntity 
   interface iCommand
+
+
 type EventListeners<'e>() =
   static let Listeners = List<'e -> unit>()
   static member Post<'e> (event:'e) = for listener in Listeners do listener event
@@ -23,15 +25,19 @@ type EventPool<'t>() =
   static member Add<'t> id event = pool.Add (id, event)
   static member _GetAll = pool
 
-type EventStore() = // todo and är code-smell
+type EventStore() = 
   let mutable eventCounter = 0
   member this.Add<'e>(event:'e) =
     EventPool<'e>.Add eventCounter event |> ignore
     eventCounter <- eventCounter + 1
-type EventManager() =
-  let eventStore = EventStore()
-  member this.Post<'e>(event:'e) =
+
+type eEvent() =
+  static let eventStore = EventStore()
+  static member PostAndReply<'e>(event:'e) =
     if typedefof<'e>.IsAssignableFrom(typedefof<iCommand>) then eventStore.Add event
     EventListeners<'e>.Post event
-  member this.Listen<'e>(handler: 'e -> unit) = EventListeners.Listen handler
-  member this._EventStore = eventStore
+  static member Post<'e>(event:'e) =
+    if typedefof<'e>.IsAssignableFrom(typedefof<iCommand>) then eventStore.Add event
+    EventListeners<'e>.Post event
+  static member Listen<'e>(handler: 'e -> unit) = EventListeners.Listen handler
+  static member _EventStore = eventStore
