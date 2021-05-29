@@ -1,14 +1,12 @@
 module Engine.Tests
+open Engine.World
 open Expecto
 
+type TestPositionData = {x:int;y:int}
 let tests =
   let w = Engine.World.World()
   testList "EngineTests" [
-    test "CreateEntity() returnar entity med Id=0." {
-      let e = w.CreateEntity()
-      Expect.equal 0 e.Id "EntityId ska vara 0"
-    }
-    test "CreateEntity efter DestroyEntity ska byta generation med använda samma id." {
+    test "EntityIds och generations" {
       let e1 = w.CreateEntity()
       Expect.equal 0 e1.Id "EntityId ska vara 0"
       Expect.equal 0 e1.Generation "GenerationId ska vara 0"
@@ -17,7 +15,12 @@ let tests =
       Expect.equal 0 e2.Id "EntityId ska vara 0"
       Expect.equal 1 e2.Generation "GenerationId ska vara 1"
     }
-    
+    test "Add och has component" {
+      let e1 = w.CreateEntity()
+      e1.Add<TestPositionData>{x=0;y=0}
+      let actual = e1.Has<TestPositionData>()
+      Expect.equal true actual "huhu"
+    }
   ]
 
 

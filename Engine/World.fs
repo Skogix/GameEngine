@@ -6,6 +6,10 @@ type Entity = {
   Generation: GenerationId
   Active: bool
 }
+type Component<'t> = {
+  Owner: Entity
+  Data: 't
+}
 type World() =
   let mutable entities: Map<EntityId, Entity> = Map.empty
   member this.CreateEntity() =
@@ -26,3 +30,7 @@ type World() =
   member this.DestroyEntity entity =
     let newEntity = {entity with Active = false}
     entities <- entities.Add(newEntity.Id, newEntity)
+type Entity with
+  member this.TryGet<'t>() = ()
+  member this.Has<'t> (): bool = true
+  member this.Add<'t>(data:'t) = ()
