@@ -1,5 +1,6 @@
 module Engine.Tests
-open Engine.World
+open Engine.API
+open Engine.Domain
 open Expecto
 open Expecto.Logging
 
@@ -23,7 +24,7 @@ let logger = Log.create "Sample"
 //
 type TestPositionData = {x:int;y:int}
 let tests =
-  let w = Engine.World.API.engineWorld
+  let w = engineWorld
   let testComponentData = {x=0;y=0}
   testList "EngineTests" [
     test "EntityIds och generations" {
@@ -44,14 +45,13 @@ let tests =
       Expect.equal expectedComponent actualComponent "Borde vara samma"
       Expect.equal true (e1.Has<TestPositionData>()) "Borde vara true"
     }
-    test "Get component" {
+    test "TryGet component" {
       let e1 = w.CreateEntity()
       e1.Add<TestPositionData>{x=0;y=0} |> ignore
       let expected = Some { Data = {x=0;y=0}
                             Owner = e1 }
       let actual = e1.TryGet<TestPositionData>()
-      Expect.equal expected actual "Records borde vara samma"
-      ()
+      Expect.equal expected actual "Borde returna some component som matchar"
     }
   ]
 

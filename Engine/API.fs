@@ -1,0 +1,14 @@
+module Engine.API
+
+open Engine.Domain
+open Engine.World
+open Entity
+
+let engineWorld = World()
+type World with
+  member this.CreateEntity() = this._EntityManager.CreateEntity()
+  member this.DestroyEntity entity = this._EntityManager.DestroyEntity entity
+type Entity with
+  member this.TryGet<'t>() = engineWorld._ComponentManager.TryGet<'t> this
+  member this.Has<'t>() = engineWorld._ComponentManager.HasComponent<'t> this
+  member this.Add<'t>(data:'t) = engineWorld._ComponentManager.AddComponent<'t> this data
