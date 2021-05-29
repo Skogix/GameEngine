@@ -14,8 +14,8 @@ let tests =
       Expect.equal 0 e1.Generation "GenerationId ska vara 0"
       w.DestroyEntity e1
       let e2 = w.CreateEntity()
-      Expect.equal 0 e1.Id "EntityId ska vara 0"
-      Expect.equal 1 e1.Generation "GenerationId ska vara 1"
+      Expect.equal 0 e2.Id "EntityId ska vara 0"
+      Expect.equal 1 e2.Generation "GenerationId ska vara 1"
     }
     
   ]
