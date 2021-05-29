@@ -1,7 +1,26 @@
 module Engine.Tests
 open Engine.World
 open Expecto
+open Expecto.Logging
 
+//let inline repeat10 f a =
+//  let mutable v = f a
+//  v <- f a
+//  v <- f a
+//  v <- f a
+//  v <- f a
+//  v <- f a
+//  v <- f a
+//  v <- f a
+//  v <- f a
+//  v <- f a
+//  v
+//let inline repeat100 f a = repeat10 (repeat10 f) a
+//let inline repeat1000 f a = repeat10 (repeat100 f) a
+//let inline repeat10000 f a = repeat10 (repeat1000 f) a
+//
+let logger = Log.create "Sample"
+//
 type TestPositionData = {x:int;y:int}
 let tests =
   let w = Engine.World.World()
