@@ -24,6 +24,7 @@ let logger = Log.create "Sample"
 type TestPositionData = {x:int;y:int}
 let tests =
   let w = Engine.World.API.engineWorld
+  let testComponentData = {x=0;y=0}
   testList "EngineTests" [
     test "EntityIds och generations" {
       let e1 = w.CreateEntity()
@@ -37,9 +38,20 @@ let tests =
     test "Add och has component" {
       let e1 = w.CreateEntity()
       Expect.equal false (e1.Has<TestPositionData>()) "Borde vara false"
-      
-      e1.Add<TestPositionData>{x=0;y=0}
+      let actualComponent = e1.Add<TestPositionData> testComponentData
+      let expectedComponent = { Owner = e1
+                                Data = testComponentData }
+      Expect.equal expectedComponent actualComponent "Borde vara samma"
       Expect.equal true (e1.Has<TestPositionData>()) "Borde vara true"
+    }
+    test "Get component" {
+      let e1 = w.CreateEntity()
+      e1.Add<TestPositionData>{x=0;y=0} |> ignore
+      let expected = Some { Data = {x=0;y=0}
+                            Owner = e1 }
+      let actual = e1.TryGet<TestPositionData>()
+      Expect.equal expected actual "Records borde vara samma"
+      ()
     }
   ]
 

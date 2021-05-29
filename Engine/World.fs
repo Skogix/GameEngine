@@ -14,13 +14,15 @@ type ComponentPool<'t>() =
   static let mutable components: Map<Entity, Component<'t>> = Map.empty
   static member Update entity component = components <- components.Add(entity, component)
   static member Has  = components.ContainsKey
+  static member TryGet = components.TryFind
 type ComponentManager() =
   let createComponent entity data = {Data = data; Owner = entity}
   member this.AddComponent<'t> entity (data:'t) =
     let newComponent = createComponent entity data
-    ComponentPool<'t>.Update entity newComponent |> ignore
+    ComponentPool<'t>.Update entity newComponent
     newComponent
   member this.HasComponent<'t> entity = ComponentPool<'t>.Has entity
+  member this.TryGet<'t> entity = ComponentPool<'t>.TryGet entity
 type World() =
   let componentManager = ComponentManager()
   let mutable entities: Map<EntityId, Entity> = Map.empty
@@ -46,6 +48,6 @@ type World() =
 module API =
   let engineWorld = World()
 type Entity with
-  member this.TryGet<'t>() = ()
+  member this.TryGet<'t>() = API.engineWorld.ComponentManager.TryGet<'t> this
   member this.Has<'t>() = API.engineWorld.ComponentManager.HasComponent<'t> this
   member this.Add<'t>(data:'t) = API.engineWorld.ComponentManager.AddComponent<'t> this data
