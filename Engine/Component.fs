@@ -12,6 +12,9 @@ type ComponentManager() =
   member this.AddComponent<'t> entity (data:'t) =
     let newComponent = createComponent entity data
     ComponentPool<'t>.Update entity newComponent
+  member this.SetComponent<'t> entity (data:'t) =
+    let newComponent = createComponent entity data
+    ComponentPool<'t>.Update entity newComponent
     newComponent
   member this.HasComponent<'t> entity = ComponentPool<'t>.Has entity
   member this.TryGet<'t> entity = ComponentPool<'t>.TryGet entity

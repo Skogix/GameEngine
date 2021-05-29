@@ -12,3 +12,4 @@ type Entity with
   member this.TryGet<'t>() = engineWorld._ComponentManager.TryGet<'t> this
   member this.Has<'t>() = engineWorld._ComponentManager.HasComponent<'t> this
   member this.Add<'t>(data:'t) = engineWorld._ComponentManager.AddComponent<'t> this data
+  member this.Set<'t>(data:'t) = engineWorld._ComponentManager.SetComponent<'t> this data
