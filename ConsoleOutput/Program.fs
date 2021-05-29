@@ -1,5 +1,10 @@
-﻿open System.Threading
+﻿open System
+open System.Threading
+open Expecto
+open Microsoft.Diagnostics.Tracing.Parsers.Clr
 [<EntryPoint>]
 let main _ =
-  printfn "uhhu"
+  Console.Clear()
+  
+  runTestsWithCLIArgs [] [||] Engine.Tests.tests |> ignore
   0

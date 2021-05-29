@@ -1,5 +1,6 @@
-todo
-```
-vettigt vis att ge overblick over onsystems
-blueprints
+# Skogix ConsoleOutput
+##### 
+```f#
+lyssnar på output
+lyssnar på debug
 ```
