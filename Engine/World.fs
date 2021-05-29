@@ -10,8 +10,21 @@ type Component<'t> = {
   Owner: Entity
   Data: 't
 }
+type ComponentPool<'t>() =
+  static let mutable components: Map<Entity, Component<'t>> = Map.empty
+  static member Update entity component = components <- components.Add(entity, component)
+  static member Has  = components.ContainsKey
+type ComponentManager() =
+  let createComponent entity data = {Data = data; Owner = entity}
+  member this.AddComponent<'t> entity (data:'t) =
+    let newComponent = createComponent entity data
+    ComponentPool<'t>.Update entity newComponent |> ignore
+    newComponent
+  member this.HasComponent<'t> entity = ComponentPool<'t>.Has entity
 type World() =
+  let componentManager = ComponentManager()
   let mutable entities: Map<EntityId, Entity> = Map.empty
+  member this.ComponentManager = componentManager
   member this.CreateEntity() =
     let newEntity: Entity =
       match 
@@ -30,7 +43,9 @@ type World() =
   member this.DestroyEntity entity =
     let newEntity = {entity with Active = false}
     entities <- entities.Add(newEntity.Id, newEntity)
+module API =
+  let engineWorld = World()
 type Entity with
   member this.TryGet<'t>() = ()
-  member this.Has<'t>() = true
-  member this.Add<'t>(data:'t) = ()
+  member this.Has<'t>() = API.engineWorld.ComponentManager.HasComponent<'t> this
+  member this.Add<'t>(data:'t) = API.engineWorld.ComponentManager.AddComponent<'t> this data

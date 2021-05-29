@@ -23,7 +23,7 @@ let logger = Log.create "Sample"
 //
 type TestPositionData = {x:int;y:int}
 let tests =
-  let w = Engine.World.World()
+  let w = Engine.World.API.engineWorld
   testList "EngineTests" [
     test "EntityIds och generations" {
       let e1 = w.CreateEntity()
