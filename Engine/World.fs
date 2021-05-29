@@ -32,5 +32,5 @@ type World() =
     entities <- entities.Add(newEntity.Id, newEntity)
 type Entity with
   member this.TryGet<'t>() = ()
-  member this.Has<'t> (): bool = true
+  member this.Has<'t>() = true
   member this.Add<'t>(data:'t) = ()

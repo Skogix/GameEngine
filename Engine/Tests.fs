@@ -17,9 +17,10 @@ let tests =
     }
     test "Add och has component" {
       let e1 = w.CreateEntity()
+      Expect.equal false (e1.Has<TestPositionData>()) "Borde vara false"
+      
       e1.Add<TestPositionData>{x=0;y=0}
-      let actual = e1.Has<TestPositionData>()
-      Expect.equal true actual "huhu"
+      Expect.equal true (e1.Has<TestPositionData>()) "Borde vara true"
     }
   ]
 
