@@ -18,6 +18,7 @@ type World with
   member this.Filter1<'a>() = Filter.filter1<'a>()
   member this.Filter2<'a,'b>() = Filter.filter2<'a,'b>()
   member this.Filter3<'a,'b,'c>() = Filter.filter3<'a,'b,'c>()
+  member this.Run() = this._SystemManager.Run()
 type Entity with
   member this.TryGet<'t>() = engineWorld._ComponentManager.TryGetComponent<'t> this
   member this.Has<'t>() = engineWorld._ComponentManager.HasComponent<'t> this
