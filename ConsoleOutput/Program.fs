@@ -1,9 +1,7 @@
 ﻿open System
-open System.Threading
 open Engine
 open Engine.Event
 open Engine.Tests
-open Engine.API
 open Domain
 open Expecto
 open Microsoft.Diagnostics.Tracing.Parsers.Clr
@@ -18,10 +16,8 @@ type EventString = {eventString:string} interface iEvent
 [<EntryPoint>]
 let main _ =
   Console.Clear()
-  runTest engineTests
-  runTest eventTests
-  runTest commandTests
-  runTest OutputConsoleTests
+  
+  engineTests |> List.iter runTest
 //
 //  let w = API.engineWorld
 //  w.Init()

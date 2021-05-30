@@ -1,7 +1,6 @@
 module Engine.World
 
 open Engine.Component
-open Engine.Domain
 open Engine.Event
 open Engine.Command
 open Engine.Entity

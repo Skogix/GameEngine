@@ -1,4 +1,10 @@
 # Skogix ECS
+##### ToDo
+```f#
+Filter/runsystems
+ConsoleUi/debug
+IO
+```
 ##### API
 ```f#
 World.CreateEntity = unit -> Entity
