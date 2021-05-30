@@ -26,19 +26,19 @@ let main _ =
   let nameData = {name="Skogix"}
   let healthData = {hp=10}
   let w = API.engineWorld
-  let e1 = w.CreateEntity()
-  let e2 = w.CreateEntity()
-  let e3 = w.CreateEntity()
-  e1.Add positionData
-  e1.Add nameData
-  e1.Add healthData
-  e2.Add positionData
-  e2.Add nameData
-  e2.Add healthData
-  e3.Add positionData
-  e3.Add nameData
-  e3.Add healthData
-  Filter.filter3<HealthComponent, PositionComponent, NameComponent>() |> printfn "%A"
+//  let e1 = w.CreateEntity()
+//  let e2 = w.CreateEntity()
+//  let e3 = w.CreateEntity()
+//  e1.Add positionData
+//  e1.Add nameData
+//  e1.Add healthData
+//  e2.Add positionData
+//  e2.Add nameData
+//  e2.Add healthData
+//  e3.Add positionData
+//  e3.Add nameData
+//  e3.Add healthData
+//  Filter.filter3<HealthComponent, PositionComponent, NameComponent>() |> printfn "%A"
   
 //
 //  let w = API.engineWorld

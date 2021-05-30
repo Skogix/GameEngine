@@ -35,12 +35,13 @@ let filterTests =
       e1.Add testBoolComponent
       e2.Add testBoolComponent
       
-      e3.Add testPositionComponent
+      e1.Add testPositionComponent
       let actualFilter1, _ = world.Filter1<TestNameData>()
       let actualFilter2, _, _ = world.Filter2<TestNameData, TestBoolData>()
-      let entities, _, _, _ = world.Filter3<TestNameData, TestBoolData, TestPositionData>()
-      Expect.equal 1 actualFilter1.Length ""
-      Expect.equal 2 actualFilter2.Length ""
+      let actualFilter3, _, _, _ = world.Filter3<TestNameData, TestBoolData, TestPositionData>()
+      Expect.equal actualFilter1.Length 3 "filter1"
+      Expect.equal actualFilter2.Length 2 "filter2"
+      Expect.equal actualFilter3.Length 1 "filter3"
       ()
     }
   ]
