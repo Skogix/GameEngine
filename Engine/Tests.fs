@@ -36,12 +36,11 @@ let filterTests =
       e2.Add testBoolComponent
       
       e3.Add testPositionComponent
-      let filter1 = world.Filter1<TestNameData>()
-      let filter2 = world.Filter2<TestNameData, TestBoolData>()
-      let filter3 = world.Filter3<TestNameData, TestBoolData, TestPositionData>()
-      Expect.equal 1 filter1.Length ""
-      Expect.equal 2 filter2.Length ""
-      Expect.equal 3 filter3.Length ""
+      let actualFilter1, _ = world.Filter1<TestNameData>()
+      let actualFilter2, _, _ = world.Filter2<TestNameData, TestBoolData>()
+      let entities, _, _, _ = world.Filter3<TestNameData, TestBoolData, TestPositionData>()
+      Expect.equal 1 actualFilter1.Length ""
+      Expect.equal 2 actualFilter2.Length ""
       ()
     }
   ]
