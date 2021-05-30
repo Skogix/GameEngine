@@ -3,11 +3,9 @@ module Engine.World
 open Engine.Component
 open Engine.Domain
 open Engine.Event
+open Engine.Command
 open Engine.Entity
-type SystemManager() =
-  let mutable runSystems = []
-  member this.Add system = runSystems <- system::runSystems
-  member this._runSystems = runSystems
+open Engine.System
 type World() =
   let componentManager = ComponentManager()
   let entityManager = EntityManager()
@@ -16,5 +14,6 @@ type World() =
   member this._ComponentManager = componentManager
   member this._EntityManager = entityManager
   member this._EventManager = engineEventManager
+  member this._CommandManager = engineCommandManager
   member this._SystemManager = systemManager
   

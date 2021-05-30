@@ -1,5 +1,6 @@
 module Engine.API
 
+open Engine.Command
 open Engine.Domain
 open Engine.Event
 open Engine.System
@@ -12,6 +13,7 @@ type World with
   member this.DestroyEntity entity = this._EntityManager.DestroyEntity entity
   member this.Listen (handler:'t -> unit) = EventPool<'t>.AddListener handler
   member this.Post<'t when 't :> iEvent> event = EventPool<'t>.Post event
+  member this.Command<'t when 't :> iCommand> command = CommandPool<'t>.Post command
   member this.GetStore() = this._EventManager.GetStore()
   member this.AddRunSystem<'t when 't :> iRunSystem> system = this._SystemManager.Add system
 type Entity with

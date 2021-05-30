@@ -1,6 +1,7 @@
 module Engine.Tests
 open System.Threading
 open Engine.API
+open Engine.Command
 open Engine.Domain
 open Engine.Event
 open Engine.System
@@ -10,9 +11,23 @@ open Expecto.Logging
 type TestPositionData = {x:int;y:int}
 type TestEventInt = {testEventInt:int} interface iEvent
 type TestEventString = {testEventString:string} interface iEvent
+type TestCommand =
+  | SendTestEventInt of TestEventInt
+  interface iCommand
 type TestRunSystem() =
   interface iRunSystem with
     member this.Run() = ()
+let commandTests =
+  let world = engineWorld
+  let testCommand = SendTestEventInt {testEventInt=10}
+  testSequenced <| testList "CommandTests" [
+    test "Command addas till store" {
+      let expected = testCommand
+      world.Command expected
+      let actual = world._CommandManager.GetStore().Head
+      Expect.equal (expected :> iCommand) actual ""
+    }
+  ]
 let eventTests =
   let world = engineWorld
   let testEventInt = {testEventInt=10} 
@@ -35,8 +50,9 @@ let eventTests =
     test "Adda runsystem till world" {
      let oldCount = world._SystemManager._runSystems.Length
      world.AddRunSystem<TestRunSystem>(TestRunSystem())
-     Expect.isGreaterThan oldCount world._SystemManager._runSystems.Length ""
+     Expect.isGreaterThan world._SystemManager._runSystems.Length oldCount ""
     }
+    
   ]
 let engineTests =
   let w = engineWorld

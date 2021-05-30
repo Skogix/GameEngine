@@ -7,7 +7,7 @@ open Engine.API
 open Domain
 open Expecto
 open Microsoft.Diagnostics.Tracing.Parsers.Clr
-let outputConsoleTests =
+let OutputConsoleTests =
   testList "outputTests" [
     test "huhu" {
       ()
@@ -20,6 +20,8 @@ let main _ =
   Console.Clear()
   runTest engineTests
   runTest eventTests
+  runTest commandTests
+  runTest OutputConsoleTests
 //
 //  let w = API.engineWorld
 //  w.Init()
