@@ -1,6 +1,7 @@
 module Engine.Entity
 
 open Engine.Domain
+open Expecto
 
 type EntityManager() =
   let mutable entities: Map<EntityId, Entity> = Map.empty

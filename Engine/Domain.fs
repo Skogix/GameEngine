@@ -1,6 +1,9 @@
 module Engine.Domain
+open Expecto
+let runTest test = runTestsWithCLIArgs [] [||] test |> ignore
 type EntityId = int
 type GenerationId = int
+type EventId = int
 type Entity = {
   Id: EntityId
   Generation: GenerationId
