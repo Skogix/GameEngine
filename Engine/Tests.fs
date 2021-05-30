@@ -8,6 +8,8 @@ open Engine.System
 open Expecto
 
 type TestPositionData = {x:int;y:int}
+type TestNameData = {name:string}
+type TestBoolData = {boolean:bool}
 type TestEventInt = {testEventInt:int} interface iEvent
 type TestEventString = {testEventString:string} interface iEvent
 type TestCommand =
@@ -16,6 +18,33 @@ type TestCommand =
 type TestRunSystem() =
   interface iRunSystem with
     member this.Run() = ()
+let filterTests =
+  let world = engineWorld
+  let testNameComponent = {name="Skogix"}
+  let testBoolComponent = {boolean=true}
+  let testPositionComponent = {x=0;y=0}
+  testSequenced <| testList "FilterTests" [
+    test "filters returnar lista med components" {
+      let e1 = world.CreateEntity()
+      let e2 = world.CreateEntity()
+      let e3 = world.CreateEntity()
+      e1.Add testNameComponent
+      e2.Add testNameComponent
+      e3.Add testNameComponent
+      
+      e1.Add testBoolComponent
+      e2.Add testBoolComponent
+      
+      e3.Add testPositionComponent
+      let filter1 = world.Filter1<TestNameData>()
+      let filter2 = world.Filter2<TestNameData, TestBoolData>()
+      let filter3 = world.Filter3<TestNameData, TestBoolData, TestPositionData>()
+      Expect.equal 1 filter1.Length ""
+      Expect.equal 2 filter2.Length ""
+      Expect.equal 3 filter3.Length ""
+      ()
+    }
+  ]
 let commandTests =
   let world = engineWorld
   let testCommand = SendTestEventInt {testEventInt=10}
@@ -104,4 +133,4 @@ let componentTests =
     }
   ]
 let engineTests =
-  [componentTests;entityTests;eventTests;commandTests]
+  [componentTests;entityTests;eventTests;commandTests;filterTests]
