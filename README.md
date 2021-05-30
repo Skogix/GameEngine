@@ -1,9 +1,9 @@
 # Skogix ECS
 ##### ToDo
 ```f#
-Filter/runsystems
 ConsoleUi/debug
 IO
+Flytta ut tests till moduler?
 ```
 ##### API
 ```f#

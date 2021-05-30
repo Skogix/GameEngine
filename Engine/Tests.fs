@@ -56,6 +56,28 @@ let commandTests =
       Expect.equal (expected :> iCommand) actual ""
     }
   ]
+let mutable testIntForSystemTests = 0
+type TestSystem() =
+  interface iRunSystem with
+    member this.Run() = testIntForSystemTests <- testIntForSystemTests + 1
+let systemTests =
+  let world = API.engineWorld
+  testSequenced <| testList "SystemTests" [
+    test "runsystem increase testint" {
+      let testSystem = TestSystem()
+      world.AddRunSystem testSystem
+      let oldCount = testIntForSystemTests
+      let system = world._SystemManager._runSystems.Head
+      system.Run()
+      let newCount = testIntForSystemTests
+      Expect.isGreaterThan newCount oldCount ""
+    }
+    test "Adda runsystem till world" {
+     let oldCount = world._SystemManager._runSystems.Length
+     world.AddRunSystem<TestRunSystem>(TestRunSystem())
+     Expect.isGreaterThan world._SystemManager._runSystems.Length oldCount ""
+    }
+  ]
 let eventTests =
   let world = engineWorld
   let testEventInt = {testEventInt=10} 
@@ -73,11 +95,6 @@ let eventTests =
       Thread.Sleep 500
       let latestEvent = world._EventManager.GetEventStore().Head
       Expect.equal (latestEvent) (testEventString :> iEvent) ""
-    }
-    test "Adda runsystem till world" {
-     let oldCount = world._SystemManager._runSystems.Length
-     world.AddRunSystem<TestRunSystem>(TestRunSystem())
-     Expect.isGreaterThan world._SystemManager._runSystems.Length oldCount ""
     }
     
   ]
@@ -133,4 +150,4 @@ let componentTests =
     }
   ]
 let engineTests =
-  [componentTests;entityTests;eventTests;commandTests;filterTests]
+  [componentTests;entityTests;eventTests;commandTests;filterTests;systemTests]
