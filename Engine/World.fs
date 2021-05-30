@@ -12,7 +12,8 @@ type World() =
   member this.Init() = ()
   member this._ComponentManager = componentManager
   member this._EntityManager = entityManager
+  member this._SystemManager = systemManager
+  
   member this._EventManager = engineEventManager
   member this._CommandManager = engineCommandManager
-  member this._SystemManager = systemManager
   

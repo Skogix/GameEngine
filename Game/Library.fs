@@ -1,5 +1,9 @@
 ﻿namespace Game
 
-module Say =
-    let hello name =
-        printfn "Hello %s" name
+open Engine.Event
+
+type Position = {x:int;y:int}
+type Glyph = char
+type OutputChannel =
+  | PrintGlyph of Position * Glyph
+  interface iEvent

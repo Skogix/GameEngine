@@ -16,4 +16,8 @@
       <PackageReference Include="Expecto.FsCheck" Version="9.0.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Engine\Engine.fsproj" />
+    </ItemGroup>
+
 </Project>
