@@ -1,20 +1,41 @@
 module Engine.Tests
+open System.Threading
 open Engine.API
 open Engine.Domain
 open Engine.Event
+open Engine.System
 open Expecto
 open Expecto.Logging
 
 type TestPositionData = {x:int;y:int}
 type TestEventInt = {testEventInt:int} interface iEvent
+type TestEventString = {testEventString:string} interface iEvent
+type TestRunSystem() =
+  interface iRunSystem with
+    member this.Run() = ()
 let eventTests =
   let world = engineWorld
-  testList "EventTests" [
+  let testEventInt = {testEventInt=10} 
+  let testEventString = {testEventString="testString"}
+  testSequenced <| testList "EventTests" [
     test "Event addas till store" {
-      let expected = {testEventInt = 10}
+      let expected = testEventInt
       world.Post expected
       let actual = world._EventManager.GetStore().Head
       Expect.equal (expected :> iEvent) actual ""
+    }
+    test "onInt post TestEventString" {
+      world.Listen<TestEventInt> (fun x -> world.Post testEventString)
+      world.Post testEventInt
+      Thread.Sleep 500
+      world._EventManager.GetStore() |> printfn "StoreTest: %A"
+      let latestEvent = world._EventManager.GetStore().Head
+      Expect.equal (latestEvent) (testEventString :> iEvent) ""
+    }
+    test "Adda runsystem till world" {
+     let oldCount = world._SystemManager._runSystems.Length
+     world.AddRunSystem<TestRunSystem>(TestRunSystem())
+     Expect.isGreaterThan oldCount world._SystemManager._runSystems.Length ""
     }
   ]
 let engineTests =
