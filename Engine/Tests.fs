@@ -8,10 +8,10 @@ open Engine.System
 open Expecto
 
 type TestPositionData = {x:int;y:int}
-type TestNameData = {name:string}
-type TestBoolData = {boolean:bool}
-type TestEventInt = {testEventInt:int} interface iEvent
-type TestEventString = {testEventString:string} interface iEvent
+type TestNameData = {TESTNAME:string}
+type TestBoolData = {TESTBOOL:bool}
+type TestEventInt = {TESTEVENTINT:int} interface iEvent
+type TestEventString = {TESTEVENTSTRING:string} interface iEvent
 type TestCommand =
   | SendTestEventInt of TestEventInt
   interface iCommand
@@ -20,8 +20,8 @@ type TestRunSystem() =
     member this.Run() = ()
 let filterTests =
   let world = engineWorld
-  let testNameComponent = {name="Skogix"}
-  let testBoolComponent = {boolean=true}
+  let testNameComponent = {TESTNAME="Skogix"}
+  let testBoolComponent = {TESTBOOL=true}
   let testPositionComponent = {x=0;y=0}
   testSequenced <| testList "FilterTests" [
     test "filters returnar lista med components" {
@@ -36,9 +36,9 @@ let filterTests =
       e2.Add testBoolComponent
       
       e1.Add testPositionComponent
-      let actualFilter1, _ = world.Filter1<TestNameData>()
-      let actualFilter2, _, _ = world.Filter2<TestNameData, TestBoolData>()
-      let actualFilter3, _, _, _ = world.Filter3<TestNameData, TestBoolData, TestPositionData>()
+      let actualFilter1 = world.Filter1<TestNameData>()
+      let actualFilter2 = world.Filter2<TestNameData, TestBoolData>()
+      let actualFilter3 = world.Filter3<TestNameData, TestBoolData, TestPositionData>()
       Expect.equal actualFilter1.Length 3 "filter1"
       Expect.equal actualFilter2.Length 2 "filter2"
       Expect.equal actualFilter3.Length 1 "filter3"
@@ -47,7 +47,7 @@ let filterTests =
   ]
 let commandTests =
   let world = engineWorld
-  let testCommand = SendTestEventInt {testEventInt=10}
+  let testCommand = SendTestEventInt {TESTEVENTINT=10}
   testSequenced <| testList "CommandTests" [
     test "Command addas till store" {
       let expected = testCommand
@@ -80,8 +80,8 @@ let systemTests =
   ]
 let eventTests =
   let world = engineWorld
-  let testEventInt = {testEventInt=10} 
-  let testEventString = {testEventString="testString"}
+  let testEventInt = {TESTEVENTINT=10} 
+  let testEventString = {TESTEVENTSTRING="testString"}
   testSequenced <| testList "EventTests" [
     test "Event addas till store" {
       let expected = testEventInt
@@ -90,7 +90,7 @@ let eventTests =
       Expect.equal (expected :> iEvent) actual ""
     }
     test "onInt post TestEventString" {
-      world.Listen<TestEventInt> (fun x -> world.Post testEventString)
+      world.OnEvent<TestEventInt> (fun x -> world.Post testEventString)
       world.Post testEventInt
       Thread.Sleep 500
       let latestEvent = world._EventManager.GetEventStore().Head

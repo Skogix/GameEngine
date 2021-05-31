@@ -10,7 +10,8 @@ let engineWorld = World()
 type World with
   member this.CreateEntity() = this._EntityManager.CreateEntity()
   member this.DestroyEntity entity = this._EntityManager.DestroyEntity entity
-  member this.Listen (handler:'t -> unit) = EventPool<'t>.AddEventListener handler
+  member this.OnEvent (handler:'t -> unit) = EventPool<'t>.AddEventListener handler
+  member this.OnCommand (handler:'t -> unit) = CommandPool<'t>.AddCommandListener handler
   member this.Post<'t when 't :> iEvent> event = EventPool<'t>.PostEvent event
   member this.Command<'t when 't :> iCommand> command = CommandPool<'t>.PostCommand command
   member this.GetStore() = this._EventManager.GetEventStore()
@@ -24,3 +25,5 @@ type Entity with
   member this.Has<'t>() = engineWorld._ComponentManager.HasComponent<'t> this
   member this.Add<'t>(data:'t) = engineWorld._ComponentManager.AddComponent<'t> this data
   member this.Set<'t>(data:'t) = engineWorld._ComponentManager.SetComponent<'t> this data
+type Component<'t> with
+  member this.Update (data:'t) = this.Owner.Add<'t> data

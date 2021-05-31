@@ -1,23 +1,27 @@
 ﻿open System
 open Engine
-open Engine.Event
-open Engine.Tests
-open Engine.API
-open Domain
-open Expecto
 open Game
-
-
+open Game.Core
+open Game.Input
+open Game.Domain
+open Game.Output
+      
+type inputHandler() =
+  interface iInputChannel with
+    member this.Get() =
+      let keyPressed = Console.ReadKey(true).Key
+      match keyPressed with
+      | ConsoleKey.UpArrow -> InputMove Up
+      | ConsoleKey.DownArrow -> InputMove Down
+      | ConsoleKey.LeftArrow -> InputMove Left
+      | ConsoleKey.RightArrow -> InputMove Right
+      | _ -> InputNone
+type outputHandler() =
+  interface iOutputChannel with
+    member this.Handler(input) = ()
 [<EntryPoint>]
 let main _ =
   Console.Clear()
-  engineTests |> List.iter runTest
-  
-  let w = API.engineWorld
-  w.Listen<OutputChannel> (fun output ->
-    match output with
-    | PrintGlyph (pos, glyph) -> printfn $"Pos: {pos.x}, {pos.y} {glyph} ") 
-  w.Post (PrintGlyph ({x=1;y=1}, 'X'))
-  w.Post (PrintGlyph ({x=1;y=2}, 'Y'))
+  Game.Init.Init(inputHandler(), outputHandler())
   
   0
