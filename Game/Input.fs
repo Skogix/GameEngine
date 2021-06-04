@@ -6,7 +6,6 @@ open Engine.Domain
 open Engine.System
 open Game.Component
 open Game.Game
-open Game.Core
 open Engine.API
 open Game.Domain
 
@@ -25,5 +24,5 @@ type InputSystem(handler:iInputChannel) =
       for _, position in filter do
         match handler.Get() with
         | InputMove dir ->
-          game.Engine.Command (Move (dir, position))
+          game.Engine.Command (MoveCommand (dir, position))
         | InputNone -> ()

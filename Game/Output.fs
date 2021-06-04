@@ -5,7 +5,6 @@ open Engine.Event
 open Engine.System
 open Game.Component
 open Engine.API
-open Game.Core
 open Game.Game
 
 type Output =
@@ -23,4 +22,6 @@ type OutputSystem(handler:iOutputChannel) =
     member this.Run() =
       for outputEvent in outputEvents do
         match outputEvent with
-        | PrintGlyph (pos, glyph) -> printfn $"Pos: {pos.x},{pos.y} - {glyph}" 
+        | PrintGlyph (pos, glyph) -> printfn $"Pos: {pos.x},{pos.y} - {glyph}"
+      // todo;  spara i en eventStore
+      outputEvents <- []

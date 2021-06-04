@@ -1,7 +1,6 @@
 ﻿open System
 open Engine
 open Game
-open Game.Core
 open Game.Input
 open Game.Domain
 open Game.Output
@@ -18,7 +17,9 @@ type inputHandler() =
       | _ -> InputNone
 type outputHandler() =
   interface iOutputChannel with
-    member this.Handler(input) = ()
+    member this.Handler(output:Output) =
+      match output with
+      | PrintGlyph (pos, glyph) -> ()
 [<EntryPoint>]
 let main _ =
   Console.Clear()

@@ -1,6 +1,7 @@
 # Skogix ECS
 ##### ToDo
 ```f#
+Sätt en ordentlig standard for IO
 ConsoleUi/debug
 IO
 Flytta ut tests till moduler?

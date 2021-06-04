@@ -9,7 +9,8 @@ type World() =
   let componentManager = ComponentManager()
   let entityManager = EntityManager()
   let systemManager = SystemManager()
-  member this.Init() = ()
+  member this.Init() =
+    systemManager.Init()
   member this._ComponentManager = componentManager
   member this._EntityManager = entityManager
   member this._SystemManager = systemManager
